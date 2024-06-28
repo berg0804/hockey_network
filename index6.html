@@ -1,0 +1,3161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Network Map with Vis.js</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network@9.1.0/dist/vis-network.min.js"></script>
+    <link href="https://unpkg.com/vis-network@9.1.0/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+    <style>
+        #mynetwork {
+            width: 100%;
+            height: 600px;
+            border: 1px solid lightgray;
+        }
+        #searchBox {
+            margin-bottom: 10 px
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+    <input type="text" id="searchBox" placeholder="Player">
+    <select id="teamDropdown">
+        <option value="">Select a Team</option>
+        <option value="ANA">Anaheim</option>
+        <option value="CGY">Calgary</option>
+        <option value="CHI">Chicago</option>
+        <option value="EDM">Edmonton</option>
+        <option value="LAK">Los Angeles</option>
+        <option value="SJS">San Jose</option>
+        <option value="SEA">Seattle</option>
+        <option value="VGK">Vegas</option>
+        </select>
+    </div>        
+    <div id="mynetwork"></div>
+
+    <script type="text/javascript">
+        // Define the nodes
+        var nodes = new vis.DataSet([
+            { id: 1, label: 'Cam Fowler', team: "ANA", color:'#F47A38'},
+            { id: 2, label: 'Troy Terry', team: "ANA", color:'#F47A38'},
+            { id: 3, label: 'Alex Killorn', team: "ANA", color:'#F47A38'},
+            { id: 4, label: 'Trevor Zegras', team: "ANA",color:'#F47A38'},
+            { id: 5, label: 'Ryan Strome', team: "ANA",color:'#F47A38'},
+            { id: 6, label: 'Jordan Eberle', team: "SEA", color:'#99D9D9'},
+            { id: 6.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 7, label: 'Ryan Spooner'},//
+            { id: 7.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 8, label: 'Frank Vatrano', team: "ANA",color:'#F47A38'},
+            { id: 8.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 9, label: '2018 77th Overall'},
+            { id: 10, label: 'Jakub Lauko'},//
+            { id: 11, label: '2022 127th Overall'},
+            { id: 12, label: 'Cedrick Guindon'},//
+            { id: 13, label: '2012 47th Overall'},
+            { id: 14, label: 'Ian White'},//
+            { id: 14.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 15, label: 'Brock McGinn', team: "ANA",color:'#F47A38'},
+            { id: 16, label: '2024 3rd Round'},//
+            { id: 17, label: 'Dmitry Kulikov'},//
+            { id: 17.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 18, label: 'Ty Smilanic'},//
+            { id: 19, label: 'Ben Chiarot'},//
+            { id: 20, label: '2023 31st Overall'},//
+            { id: 20.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 21, label: 'Mikhail Gulyayev'},//
+            { id: 22, label: 'Ross Johnston', team: "ANA",color:'#F47A38'},
+            { id: 23, label: 'Cutter Gauthier', team: "ANA",color:'#F47A38'},
+            { id: 24, label: 'Jamie Drysdale'},//
+            { id: 25, label: '2025 2nd Round'},//
+            { id: 25.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 26, label: 'Leo Carlsson', team: "ANA",color:'#F47A38'},
+            { id: 27, label: 'Sam Colangelo', team: "ANA",color:'#F47A38'},
+            { id: 28, label: 'Mason McTavish', team: "ANA",color:'#F47A38'},
+            { id: 29, label: 'Max Jones', team: "ANA",color:'#F47A38'},
+            { id: 30, label: 'Isac Lundestrom', team: "ANA",color:'#F47A38'},
+            { id: 31, label: 'Benoit-Olivier Groulx', team: "ANA",color:'#F47A38'},
+            { id: 32, label: 'Brett Leason', team: "ANA",color:'#F47A38'},
+            { id: 33, label: 'Radko Gudas', team: "ANA", color:'#F47A38'},
+            { id: 34, label: 'Matt Niskanen'},//
+            { id: 34.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 35, label: 'Braydon Coburn'},//
+            { id: 36, label: '2015 29th Overall'},//
+            { id: 38, label: '2015 90th Overall'},//
+            { id: 38.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 37, label: 'Gabriel Carlsson'},//
+            { id: 39, label: 'Matej Tomek'},//
+            { id: 40, label: 'Pavel Mintyukov', team: "ANA", color:'#F47A38'},
+            { id: 41, label: 'Olen Zellweger', team: "ANA", color:'#F47A38'},
+            { id: 42.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 42, label: 'Urho Vaakanainen', team: "ANA", color:'#F47A38'},
+            { id: 43, label: 'Hampus Lindholm'},//
+            { id: 44, label: 'Kodie Curran'},//
+            { id: 45, label: 'John Moore'},//
+            { id: 46, label: '2022 22nd Overall'},
+            { id: 47, label: 'Nathan Gaucher', team: "ANA", color:'#F47A38'},
+            { id: 48, label: '2023 60th Overall'},//
+            { id: 49, label: 'Damian Clara', team: "ANA", color:'#F47A38'},
+            { id: 50, label: '2024 2nd Overall'},//
+            { id: 51, label: 'Gustav Lindstrom', team: "ANA", color:'#F47A38'},
+            { id: 51.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 52, label: '2025 4th Round'},//
+            { id: 53, label: 'Jeff Petry'},//
+            { id: 54, label: 'Jackson Lacombe', team: "ANA", color:'#F47A38'},
+            { id: 55, label: 'John Gibson', team: "ANA", color:'#F47A38'},
+            { id: 56, label: '2011 39th Overall'},//
+            { id: 57, label: '2011 30th Overall'},//
+            { id: 58, label: 'Rikard Rakell'},//
+            { id: 59, label: '2011 22nd Overall'},//
+            { id: 56.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 60, label: 'Tyler Biggs'},//
+            { id: 61, label: 'Lukas Dostal', team: "ANA", color:'#F47A38'},
+            { id: 62, label: 'Nico Myatovic', team: "ANA", color:'#F47A38'},
+            { id: 63, label: 'Josh Lopina', team: "ANA", color:'#F47A38'},
+            { id: 64, label: 'Yegor Sidorov', team: "ANA", color:'#F47A38'},
+            { id: 65, label: 'Nicolas Deslauriers'},//
+            { id: 66, label: '2023 85th Overall'},
+            { id: 66.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 67, label: 'Coulson Pitre', team: "ANA", color:'#F47A38'},
+            { id: 68, label: 'Jaxsen Wiebe', team: "ANA", color:'#F47A38'},
+            { id: 69, label: 'Judd Caulfield', team: "ANA", color:'#F47A38'},
+            { id: 70, label: 'Thimo Nickl'},//
+            { id: 69.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 71, label: '2020 48th Overall'},//
+            { id: 71.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 72, label: 'Jan Mysak', team: "ANA", color:'#F47A38'},
+            { id: 72.1, label: 'Jacob Perreault'},//
+            { id: 72.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 73, label: 'Andrew Shaw'},//
+            { id: 74, label: '2021 223rd Overall'},//
+            { id: 75, label: 'Samuel Lipkin'},//
+            { id: 76, label: '2020 203rd Overall'},//
+            { id: 77, label: 'Chase Bradley'},//
+            { id: 78, label: '2021 76th Overall'},
+            { id: 79, label: 'Tyson Hinds',team: "ANA", color:'#F47A38'},
+            { id: 80, label: 'Sasha Pastajuov', team: "ANA", color:'#F47A38'},
+            { id: 81, label: 'Blake McLuaghlin', team: "ANA", color:'#F47A38'},
+            { id: 82, label: '2018 79th Overall'},//
+            { id: 83, label: 'Sami Vatanen'},//
+            { id: 84, label: 'Adam Henrique'},//
+            { id: 85, label: 'Joseph Blandisi'},//
+            { id: 86, label: '2019 70th Overall'},//
+            { id: 87, label: 'Daniil Misyul'},//
+            { id: 82.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 88, label: 'Jackson Perbix', team: "ANA", color:'#F47A38'},
+            { id: 89, label: '2019 29th Overall'},//
+            { id: 90, label: 'Brayden Tracey', team: "ANA", color:'#F47A38'},
+            { id: 91, label: 'Danny O-Regan'},//
+            { id: 92, label: '2019 122nd Overall'},//
+            { id: 93, label: 'Ethan Keppen'},//
+            { id: 94, label: 'Evander Kane', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 94.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 94.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 95, label: 'Brendan Guhle'},//
+            { id: 96, label: 'Brandon Montour'},//
+            { id: 96.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 97, label: 'Trevor Janicke', team: "ANA", color:'#F47A38'},
+            { id: 98, label: 'Nikita Nesterenko', team: "ANA", color:'#F47A38'},
+            { id: 99, label: '2019 172nd Overall'},
+            { id: 99.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 100, label: 'Brad Hunt'},//
+            { id: 101, label: '2019 135th Overall'},
+            { id: 102, label: 'Isaiah Saville', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 103, label: 'Andrej Sustr'},//
+            { id: 104, label: 'John Klingberg'},//
+            { id: 105, label: '2025 4th Round'},//
+            { id: 98.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 106, label: 'Artyom Galimov', team: "ANA", color:'#F47A38'},
+            { id: 107, label: '2020 207th Overall'},
+            { id: 107.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 108, label: 'Ethan Bowen', team: "ANA", color:'#F47A38'},
+            { id: 109, label: '2022 203rd Overall'},//
+            { id: 110, label: 'James Fisher'},//
+            { id: 111, label: 'Kyle Kukkonen', team: "ANA", color:'#F47A38'},
+            { id: 112, label: 'Pavol Regenda', team: "ANA", color:'#F47A38'},
+            { id: 113, label: 'Michael Callow', team: "ANA", color:'#F47A38'},
+            { id: 114, label: '2022 154th Overall'},
+            { id: 114.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 115, label: 'Ben Hutton', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 116, label: 'Carey Terrance', team: "ANA", color:'#F47A38'},
+            { id: 117, label: 'Drew Helleson', team: "ANA", color:'#F47A38'},
+            { id: 117.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 118, label: 'Josh Manson'},//
+            { id: 119, label: '2023 59th Overall'},
+            { id: 120, label: 'Rodwin Dionico', team: "ANA", color:'#F47A38'},
+            { id: 121, label: 'Tristan Luneau', team: "ANA", color:'#F47A38'},
+            { id: 122, label: '2022 53rd Overall'},
+            { id: 122.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 123, label: 'Calle Clang', team: "ANA", color:'#F47A38'},
+            { id: 124, label: 'Zach Aston-Reese'},//
+            { id: 125, label: 'Dominik Simon'},//
+            { id: 126, label: 'Noah Warren', team: "ANA", color:'#F47A38'},
+            { id: 127, label: '2022 75th Overall'},//
+            { id: 128, label: 'Vinzenz Rohrer'},//
+            { id: 129, label: 'William Francis', team: "ANA", color:'#F47A38'},
+            { id: 130, label: 'Ian Moore', team: "ANA", color:'#F47A38'},
+            { id: 131, label: 'Konnor Smith', team: "ANA", color:'#F47A38'},
+            { id: 132, label: 'Vojtech Port', team: "ANA", color:'#F47A38'},
+            { id: 133, label: 'Tomas Suchanek', team: "ANA", color:'#F47A38'},
+            { id: 134, label: '2022 178th Overall'},
+            { id: 134.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 135, label: 'Vychaeslav Buteyets', team: "ANA", color:'#F47A38'},
+            { id: 136, label: 'Matt Irwin'},//
+            { id: 137, label: 'Korbinian Holzer'},//
+            { id: 138, label: 'Gage Alexander', team: "ANA", color:'#F47A38'},
+            { id: 139, label: '2021 148th Overall'},
+            { id: 139.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 139.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 140, label: 'Tyler Ennis'},//
+            { id: 141, label: 'Erik Gudbranson'},//
+            { id: 142, label: 'Jonathan Huberdeau', team: "CGY", color:'#D2001C'},
+            { id: 142.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 143, label: 'MacKenzie Weegar', team: "CGY", color:'#D2001C'},
+            { id: 144, label: 'Cole Schwindt', team: "CGY", color:'#D2001C'},
+            { id: 145, label: '2025/26 1st Round'},//
+            { id: 146, label: 'Matthew Tkachuk'},//
+            { id: 147, label: '2025/26 1st Round'},//
+            { id: 148, label: 'Nazem Kadri', team: "CGY", color:'#D2001C'},
+            { id: 148.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 149, label: 'Calle Rosen'},//
+            { id: 150, label: '2020 75th Overall'},//
+            { id: 151, label: 'Jean-Luc Foudy'},//
+            { id: 152, label: 'Tyson Barrie'},//
+            { id: 153, label: 'Alexander Kerfoot'},//
+            { id: 154, label: '2020 180th Overall'},//
+            { id: 155, label: 'Joe Miller'},//
+            { id: 156, label: 'Andrew Mangiapane', team: "CGY", color:'#D2001C'},
+            { id: 157, label: 'Andrei Kuzmenko', team: "CGY", color:'#D2001C'},
+            { id: 157.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 158, label: 'Elias Lindholm'},//
+            { id: 159, label: 'Joni Jurmo', team: "CGY", color:'#D2001C'},//
+            { id: 160, label: '2024 1st Round'},//
+            { id: 161, label: '2024 Conditional Pick'},//
+            { id: 162, label: 'Hunter Brzustewicz', team: "CGY", color:'#D2001C'},//
+            { id: 163, label: 'Blake Coleman', team: "CGY", color:'#D2001C'},
+            { id: 163.1, label: '2011 75th Overall'},//
+            { id: 163.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 164, label: 'Jamie Langenbrunner'},//
+            { id: 163.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 165, label: 'Nolan Foote'},//
+            { id: 166, label: '2020 20th Overall'},
+            { id: 167, label: 'Shakir Mulhamadullin', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 168, label: 'Mikael Backlund', team: "CGY", color:'#D2001C'},
+            { id: 170, label: 'Glen Metropolit'},//
+            { id: 169, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 171.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 171, label: '2007 24th Overall'},
+            { id: 172, label: '2007 85th Overall'},//
+            { id: 173, label: '2008 3rd Overall'},//
+            { id: 174, label: '2008 33rd Overall'},//
+            { id: 175, label: 'Keith Tkachuk'},//
+            { id: 176, label: '2007 18th Overall'},//
+            { id: 177, label: '2007 70th Overall'},//
+            { id: 178, label: 'Brett Sonne'},//
+            { id: 179, label: 'Zach Bogosian'},//
+            { id: 180, label: 'Philip McRae'},//
+            { id: 181, label: 'Ian Cole'},//
+            { id: 182, label: 'John Negrin'},//
+            { id: 183, label: 'Yegor Sharangovich', team: "CGY", color:'#D2001C'},
+            { id: 184, label: 'Tyler Toffoli'},//
+            { id: 185, label: '2023 80th Overall'},
+            { id: 185.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 183.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 186, label: 'Aydar Suniev', team: "CGY", color:'#D2001C'},
+            { id: 187, label: 'Kevin Rooney', team: "CGY", color:'#D2001C'},
+            { id: 188, label: 'Martin Pospisil', team: "CGY", color:'#D2001C'},
+            { id: 189, label: 'Matt Coronato', team: "CGY", color:'#D2001C'},
+            { id: 190, label: 'Connor Zary', team: "CGY", color:'#D2001C'},
+            { id: 190.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 191, label: '2020 24th Overall'},//
+            { id: 192, label: '2020 22nd Overall'},//
+            { id: 193, label: '2020 80th Overall'},
+            { id: 194, label: 'Hendrix Lapierre'},//
+            { id: 195, label: 'Jake Boltmann', team: "CGY", color:'#D2001C'},
+            { id: 196, label: 'Walker Duehr', team: "CGY", color:'#D2001C'},
+            { id: 197, label: 'Dryden Hunt', team: "CGY", color:'#D2001C'},
+            { id: 197.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 198, label: 'Denis Malgin'},//
+            { id: 198.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 199, label: 'Radim Zohorna'},//
+            { id: 200, label: 'Dillon Dube', team: "CGY", color:'#D2001C'},
+            { id: 200.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 201, label: '2016 56th Overall'},
+            { id: 202, label: 'Kris Russell'},//
+            { id: 203, label: 'Jyrki Jokipakka'},//
+            { id: 204, label: 'Brett Pollock'},//
+            { id: 205, label: 'Adam Klapka', team: "CGY", color:'#D2001C'},
+            { id: 206, label: '2013 206th Overall'},
+            { id: 206.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 207, label: 'Hugo Fagerblom'},//
+            { id: 208, label: '2014 182nd Overall'},//
+            { id: 209, label: 'Rasmus Andersson', team: "CGY", color:'#D2001C'},
+            { id: 210, label: '2015 53rd Overall'},
+            { id: 210.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 211, label: 'Sven Baertschi'},//
+            { id: 212, label: 'Daniil Miromanov', team: "CGY", color:'#D2001C'},
+            { id: 212.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 213, label: '2025 1st Round'},//
+            { id: 214, label: '2025 3rd Round'},//
+            { id: 215, label: '2024 5th Round'},//
+            { id: 216, label: 'Noah Hanifin', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 217, label: 'Mikhail Vorobyev'},//
+            { id: 218, label: 'Joel Hanley', team: "CGY", color:'#D2001C'},
+            { id: 219, label: 'Brayden Pachal', team: "CGY", color:'#D2001C'},
+            { id: 220, label: 'Nikita Okhotyuk', team: "CGY", color:'#D2001C'},
+            { id: 220.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 221, label: 'Marcus Johansson'},//
+            { id: 221.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 222, label: '2019 61st Overall'},
+            { id: 223, label: '2020 120th Overall'},//
+            { id: 224, label: 'Ethan Edwards'},//
+            { id: 225, label: 'Timo Meier'},//
+            { id: 226, label: 'Scott Harrington'},//
+            { id: 227, label: 'Santeri Hatakka'},//
+            { id: 228, label: 'Timur Ibragimov'},//
+            { id: 229, label: 'Zachary Emond'},//
+            { id: 230, label: '2024 5th Round'},//
+            { id: 231, label: 'Fabian Zetterlund', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 232, label: 'Andreas Johnsson'},//
+            { id: 233, label: '2023 26th Overall'},
+            { id: 234, label: '2024 2nd Round'},//
+            { id: 235, label: '2024 7th Round'},//
+            { id: 236, label: 'Quentin Musty', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 237, label: '2024 5th Round'},//
+            { id: 221.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 238, label: 'Ilya Solovyov', team: "CGY", color:'#D2001C'},
+            { id: 239, label: 'Jacob Markstrom'},//
+            { id: 240.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 240, label: '2008 31st Overall'},
+            { id: 240.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 241, label: 'Shawn Matthias'},//
+            { id: 242, label: 'Steven Anthony'},//
+            { id: 243, label: 'Roberto Luongo'},//
+            { id: 244, label: 'Chris Gratton'},//
+            { id: 245, label: 'Dan Vladar', team: "CGY", color:'#D2001C'},
+            { id: 245.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 246, label: '2022 91st Overall'},
+            { id: 247, label: 'Ben MacDonald', team: "SEA", color:'#99D9D9'},
+            { id: 249, label: 'Dustin Wolf', team: "CGY", color:'#D2001C'},
+            { id: 248.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 248, label: '2019 214th Overall'},
+            { id: 250, label: 'Eddie Lack'},//
+            { id: 251, label: 'Ryan Murphy (1993)'},//
+            { id: 252, label: 'Keegan Kanzig'},//
+            { id: 253, label: '2019 181st Overall'},//
+            { id: 254, label: 'Kevin Wall'},//
+            { id: 255, label: 'Samuel Honzek', team: "CGY", color:'#D2001C'},
+            { id: 256, label: 'William Stromgen', team: "CGY", color:'#D2001C'},
+            { id: 257, label: 'Sam Morton', team: "CGY", color:'#D2001C'},
+            { id: 258, label: 'Parker Bell', team: "CGY", color:'#D2001C'},
+            { id: 259, label: 'Rory Kerins', team: "CGY", color:'#D2001C'},
+            { id: 260, label: 'Ilya Nikolaev', team: "CGY", color:'#D2001C'},
+            { id: 261, label: 'Lucas Ciona', team: "CGY", color:'#D2001C'},
+            { id: 262, label: 'Clark Bishop', team: "CGY", color:'#D2001C'},
+            { id: 262.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 263, label: 'Maxime Lajoie'},//
+            { id: 264, label: 'Pavel Karnaukhov', team: "CGY", color:'#D2001C'},
+            { id: 265, label: 'Eetu Tuulola', team: "CGY", color:'#D2001C'},
+            { id: 266, label: 'Demetrios Koumontzis', team: "CGY", color:'#D2001C'},
+            { id: 266.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 267, label: '2018 108th Overall'},
+            { id: 268, label: '2016 54th Overall'},//
+            { id: 269, label: 'Tyler Parsons'},//
+            { id: 270, label: 'Jiri Hudler'},//
+            { id: 271, label: 'Riley Damiani', team: "CGY", color:'#D2001C'},
+            { id: 271.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 272, label: 'Mathias Emilio Pettersen'},
+            { id: 273, label: 'Jakob Pelletier', team: "CGY", color:'#D2001C'},
+            { id: 274.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 274, label: '2019 81st Overall'},
+            { id: 275, label: '2019 104th Overall'},//
+            { id: 276, label: '2019 114th Overall'},//
+            { id: 277, label: 'Eric Hjorth'},//
+            { id: 278, label: 'Dmitri Voronkov'},//
+            { id: 279, label: 'Cade Littler', team: "CGY", color:'#D2001C'},
+            { id: 280, label: 'Jaden Lipinski', team: "CGY", color:'#D2001C'},
+            { id: 281, label: 'Calle Jarnkrok'},//
+            { id: 282, label: '2024 7th Round'},//
+            { id: 283, label: '2022 61st Overall'},
+            { id: 284, label: 'David Goyette', team: "SEA", color:'#99D9D9'},
+            { id: 285.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 285, label: 'Oliver Bjorkstrand', team: "SEA", color:'#99D9D9'},
+            { id: 286, label: '2023 114th Overall'},//
+            { id: 287, label: 'Luca Pinelli'},//
+            { id: 288, label: 'Damon Severson'},//
+            { id: 288.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 289, label: '2020 72nd Overall'},//
+            { id: 290, label: '2020 19th Overall'},//
+            { id: 291, label: 'Jeremie Poirier', team: "CGY", color:'#D2001C'},
+            { id: 291.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 292, label: 'Braden Schneider'},//
+            { id: 293, label: '2021 48th Overall'},
+            { id: 293.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 294, label: 'Artyom Grushnikov', team: "CGY", color:'#D2001C'},
+            { id: 295, label: 'Marc Staal'},//
+            { id: 296, label: '2021 23rd Overall'},//
+            { id: 297, label: '2021 138th Overall'},//
+            { id: 298, label: '2021 15th Overall'},//
+            { id: 293.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 293.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 299, label: 'Wyatt Johnston'},//
+            { id: 300, label: 'Jack Bar'},//
+            { id: 301, label: 'Sebastian Cossa'},//
+            { id: 302, label: '2024 2nd Round'},//
+            { id: 303, label: 'Cole Brady'},//
+            { id: 304, label: 'Chris Tanev'},//
+            { id: 305, label: 'Rushan Rafikov', team: "CGY", color:'#D2001C'},
+            { id: 306, label: 'Carl-Johan Lerby', team: "CGY", color:'#D2001C'},
+            { id: 307, label: 'Yan Kuznetsov', team: "CGY", color:'#D2001C'},
+            { id: 308.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 308, label: 'Kevin Connauton'},//
+            { id: 309, label: 'Carl Soderberg'},//
+            { id: 308.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 310, label: 'Andre Burakovsky', team: "SEA", color:'#99D9D9'},
+            { id: 311, label: 'Scott Kosmachuk'},//
+            { id: 312, label: '2020 56th Overall'},
+            { id: 313, label: 'Tristen Robins', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 314, label: 'Etienne Morin', team: "CGY", color:'#D2001C'},
+            { id: 315, label: 'Axel Hurtig', team: "CGY", color:'#D2001C'},
+            { id: 316, label: 'Waltteri Ignatjew', team: "CGY", color:'#D2001C'},
+            { id: 317.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 317, label: '2020 96th Overall'},
+            { id: 318, label: '2019 108th Overall'},//
+            { id: 319, label: 'Yegor Spiridonov', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 317.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 320, label: 'Marco Scandella'},//
+            { id: 317.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 321, label: 'Michael Frolik'},//
+            { id: 322, label: 'Daniil Chechelev', team: "CGY", color:'#D2001C'},
+            { id: 323, label: 'Arseni Sergeyev', team: "CGY", color:'#D2001C'},
+            { id: 324, label: 'Yegor Yegorov', team: "CGY", color:'#D2001C'},
+            { id: 325, label: 'Connor McDavid', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 326, label: 'Leon Draisaitl', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 327, label: 'Zach Hyman', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 327.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 328, label: 'Greg McKegg'},//
+            { id: 329, label: 'Tyler Myers'},//
+            { id: 330, label: 'Drew Stafford'},//
+            { id: 331, label: 'Joel Armia'},//
+            { id: 332, label: 'Brendan Lemieux'},//
+            { id: 333, label: 'Jason Kasdorf'},//
+            { id: 334, label: '2015 25th Overall'},//
+            { id: 335, label: 'Jack Roslovic'},//
+            { id: 336, label: 'Ryan Nugent-Hopkins', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 338, label: 'Ryan McLeod', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 339, label: 'Derek Ryan', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 340, label: 'Dylan Holloway', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 341, label: 'Darnell Nurse', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 342, label: 'Mattias Ekholm', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 342.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 343, label: '2024 6th Round'},//
+            { id: 344, label: '2024 4th Round'},//
+            { id: 345, label: 'Reid Schaefer'},//
+            { id: 346, label: '2023 24th Overall'},//
+            { id: 347, label: 'Tanner Molendyk'},//
+            { id: 348, label: 'Evan Bouchard', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 349, label: 'Cody Ceci', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 349.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 350, label: 'Ben Harpur'},//
+            { id: 351, label: 'Aaron Luchuk'},//
+            { id: 352, label: 'Nikita Zaitsev'},//
+            { id: 353, label: 'Connor Brown'},//
+            { id: 354, label: 'Tanner Molendyk'},//
+            { id: 356, label: 'Alex Laferriere', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 355, label: '2020 83rd Overall'},
+            { id: 357, label: 'Brett Kulak', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 357.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 357.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 358, label: 'Rinat Valiev'},//
+            { id: 359, label: 'Matt Taormina'},//
+            { id: 360, label: 'William Lagesson'},//
+            { id: 361, label: '2024 7th Round'},//
+            { id: 362, label: '2022 62nd Overall'},//
+            { id: 363, label: 'Lane Hutson'},//
+            { id: 364, label: 'Philip Broberg', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 365, label: 'Jack Campbell', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 365.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 365.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 366, label: 'Nick Ebert'},//
+            { id: 367, label: 'Trevor Moore', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 368, label: 'Kyle Clifford'},//
+            { id: 369, label: '2021 89th Overall'},//
+            { id: 370, label: 'Cameron Whynot'},//
+            { id: 371.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 371.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 355.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 371, label: '2017 78th Overall'},//
+            { id: 372, label: 'Michael Stone'},//
+            { id: 373, label: '2018 136th Overall'},//
+            { id: 374, label: 'Akira Schmid'},//
+            { id: 375, label: '2017 82nd Overall'},//
+            { id: 376, label: '2017 126th Overall'},//
+            { id: 377, label: 'Cameron Crotty'},//
+            { id: 378, label: 'Michael Karow'},//
+            { id: 379, label: 'Stuart Skinner', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 380, label: 'Carl Berglund', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 381.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 381, label: '2021 22nd Overall'},
+            { id: 382, label: '2021 90th Overall'},
+            { id: 383, label: '2021 20th Overall'},//
+            { id: 382.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 382.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 384, label: 'Luca Munzenberger', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 385, label: 'Jesper Wallstedt'},//
+            { id: 386, label: 'Xavier Bourgault', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 387, label: 'James Stefan', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 388, label: '2021 65th Overall'},
+            { id: 388.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 388.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 389, label: 'Jimmy Vesey'},//
+            { id: 390, label: '2023 152nd Overall'},//
+            { id: 391, label: 'Rasmus Larsson'},//
+            { id: 392, label: 'Jayden Grubbe', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 393, label: 'Jake Chiasson', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 394, label: '2020 126th Overall'},
+            { id: 394.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 394.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 395, label: 'Mikkel Boedker'},//
+            { id: 396, label: 'Julius Bergman'},//
+            { id: 397, label: 'Mike Hoffman'},//
+            { id: 398, label: 'Cody Donaghey'},//
+            { id: 399, label: '2020 158th Overall'},//
+            { id: 400, label: 'Philippe Daoust'},//
+            { id: 401, label: '2020 100th Overall'},
+            { id: 402, label: '2020 76th Overall'},
+            { id: 403, label: 'Carter Savoie', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 404, label: 'Danil Gushchin', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 405, label: 'Tyler Tullio', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 406, label: 'Brady Stonehouse', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 407, label: 'Matvei Petrov', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 408, label: 'Drake Caggiula', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 409, label: 'Jason Garrison'},//
+            { id: 410, label: 'Brandon Manning'},//
+            { id: 411, label: 'Robin Norell'},//
+            { id: 412, label: 'Lane Pederson', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 412.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 412.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 412.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 413, label: '2024 4th Round'},//
+            { id: 414, label: 'Brent Burns'},//
+            { id: 415, label: 'Eetu Makaniemi'},//
+            { id: 416, label: 'Steven Lorentz'},//
+            { id: 417, label: 'Ethan Bear'},//
+            { id: 418, label: '2023 94th Overall'},//
+            { id: 419, label: '2023 139th Overall'},//
+            { id: 420, label: 'Jayden Perron'},//
+            { id: 421, label: 'Charles-Alexis Legault'},//
+            { id: 422, label: 'Raphael Lavoie', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 423, label: 'Tomas Mazura', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 424, label: 'Maxim Denezhkin', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 401.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 425, label: '2020 34th Overall'},//
+            { id: 426, label: '2020 38th Overall'},
+            { id: 427, label: 'John-Jason Peterka'},//
+            { id: 428, label: 'Thomas Bordeleau', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 429, label: 'Maksim Berezkin', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 430, label: 'Shane LaChance', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 430.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 431, label: '2021 186th Overall'},//
+            { id: 432, label: 'John Marino'},//
+            { id: 433, label: 'James Hamblin', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 434, label: 'Noah Philp', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 435, label: 'Joel Maatta', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 436, label: 'Matt Copponi', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 437, label: 'Beau Akey', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 438, label: 'Max Wanner', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 439, label: 'Philip Kemp', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 440, label: 'Ben Gleason', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 441, label: 'Noel Hoefenmayer', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 441.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 442.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 442, label: '2017 108th Overall'},
+            { id: 443, label: '2016 120th Overall'},//
+            { id: 444, label: 'Otto Koivula'},//
+            { id: 445, label: '2017 44th Overall'},//
+            { id: 446, label: '2017 75th Overall'},//
+            { id: 447, label: '2017 35th Overall'},//
+            { id: 448, label: 'Filip Westerlund'},//
+            { id: 449, label: 'Nate Schnarr'},//
+            { id: 450, label: 'Isaac Ratcliffe'},//
+            { id: 451, label: 'Ryan Donato', team: "CHI", color:'#CF0A2C'},
+            { id: 452, label: 'Patrick Marleau'},//
+            { id: 453, label: 'Nikita Yevseyev', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 454, label: 'Connor Ungar', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 455, label: '2018 62nd Overall'},
+            { id: 455.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 455.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 456, label: 'Olivier Rodrigue', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 457, label: 'Lars Eller'},//
+            { id: 458, label: '2017 58th Overall'},//
+            { id: 459, label: 'Joni Ikonen'},//
+            { id: 460, label: '2018 133rd Overall'},//
+            { id: 461, label: 'Samuel Houde'},//
+            { id: 460.1, label: '2018 71st Overall'},//
+            { id: 461.1, label: 'Jordan Harris'},//
+            { id: 462, label: 'Ryan Fanti', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 463, label: 'Ty Taylor', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 464, label: 'Sam Carrick'},//
+            { id: 465, label: '2024 7th Round'},//
+            { id: 466, label: '2026 4th Round'},//
+            { id: 467, label: 'Samuel Jonsson', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 468, label: 'Nathaniel Day', team: "EDM", color:'#041E42',font: {color:'#FFFFFF'}},
+            { id: 469, label: 'Pierre-Luc Dubois'},//
+            { id: 469.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 469.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 470, label: 'Patrik Laine'},//
+            { id: 471, label: '2022 77th Round'},//
+            { id: 472, label: 'Danil Zhilkin'},//
+            { id: 473, label: 'Alex Iafallo'},//
+            { id: 474, label: 'Rasmus Kupari'},//
+            { id: 475, label: 'Gabriel Vilardi'},//
+            { id: 476, label: '2024 2nd Round'},//
+            { id: 477, label: 'Kevin Fiala', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 477.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 477.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 478, label: 'Mikael Granlund', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 478.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 478.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 479, label: 'Brock Faber'},//
+            { id: 480, label: '2022 19th Overall'},//
+            { id: 481, label: 'Liam Ohgren'},//
+            { id: 482, label: 'Anze Kopitar ', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 483, label: 'Phillip Danault', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 484, label: '2011 26th Overall'},//
+            { id: 484.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 484.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 485, label: 'Troy Brouwer'},//
+            { id: 486, label: 'Dale Weise'},//
+            { id: 487, label: 'Tomas Fleischmann'},//
+            { id: 488, label: '2018 38th Overall'},//
+            { id: 489, label: 'Alexander Romanov'},//
+            { id: 490, label: 'Adrian Kempe', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 491, label: 'Michael Carcone'},//
+            { id: 492, label: 'Nick Moutrey'},//
+            { id: 493, label: '2011 26th Overall'},
+            { id: 493.8, label: '2016 57th Overall'},
+            { id: 493.7, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 493.6, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 494, label: 'Carl Grundstrom', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 495, label: 'Daniel Winnik'},//
+            { id: 496, label: 'Brooks Laich'},//
+            { id: 497, label: 'Connor Carrick'},//
+            { id: 498, label: '2016 145th Overall'},//
+            { id: 499, label: 'Beck Malenstyn'},//
+            { id: 500, label: 'Sean Durzi'},//
+            { id: 501, label: 'Jake Muzzin'},//
+            { id: 502, label: '2019 22nd Overall'},//
+            { id: 503, label: 'Tobias Bjornfot'},//
+            { id: 504, label: 'Blake Lizotte', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 505, label: 'Alex Turcotte', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 506, label: 'Arthur Kaliyev', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 507, label: 'Quenton Byfield', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 508, label: 'Drew Doughty', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 509, label: 'Vladislav Gavrikov', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 509.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 510, label: 'Jonathan Quick'},//
+            { id: 511, label: 'Joonas Korpisalo'},//
+            { id: 512, label: '2023 22nd Overall'},//
+            { id: 512.1, label: '2024 3rd Round'},//
+            { id: 513, label: 'Oliver Bonk'},//
+            { id: 514, label: 'Mikey Anderson', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 515, label: 'Andreas Englund', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 515.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 516, label: 'Jack Johnson'},//
+            { id: 517, label: 'Jacob Moverare', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 518, label: 'Jordan Spence', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 519, label: 'David Rittich', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 519.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 520, label: '2022 90th Overall'},//
+            { id: 521, label: 'Aidan Thompson'},//
+            { id: 522, label: 'Aatu Jamsen', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 523, label: 'Kaleb Lawrence', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 524, label: '2022 215th Overall'},
+            { id: 525, label: '2023 214th Overall'},//
+            { id: 526, label: 'Casper Nassen'},//
+            { id: 527, label: '2022 215th Overall'},
+            { id: 528, label: 'Jeff Carter'},//
+            { id: 529, label: '2022 86th Overall'},//
+            { id: 529.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 530, label: '2023 78th Overall'},
+            { id: 530.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 531, label: 'Koehn Ziemmer', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 532, label: 'Lucas Edmonds'},//
+            { id: 533, label: '2021 42nd Overall'},
+            { id: 534, label: '2021 49th Overall'},//
+            { id: 535, label: '2021 136th Overall'},//
+            { id: 533.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 536, label: 'Francesco Pinelli', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 537, label: 'Ben Roger'},//
+            { id: 538, label: 'Robert Orr'},//
+            { id: 539, label: 'Martin Chromiak', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 540, label: '2021 59th Overall'},
+            { id: 541, label: '2021 72nd Overall'},//
+            { id: 542, label: '2021 109th Overall'},//
+            { id: 540.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 543, label: 'Samuel Helenius', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 544, label: 'Anton Olsson'},//
+            { id: 545, label: 'Jackson Blake'},//
+            { id: 546, label: 'Akil Thomas', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 547, label: 'Andre Lee', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 548, label: 'Taylor Ward', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 549, label: 'Tyler Madden', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 549.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 550, label: 'Tim Schaller'},//
+            { id: 551, label: '2020 51st Overall'},//
+            { id: 552, label: 'Theodor Niederbach'},//
+            { id: 553, label: '2019 50th Overall'},
+            { id: 553.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 553.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 553.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 554, label: 'William Karlsson', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 555, label: 'David Clarkson'},//
+            { id: 556, label: '2017 24th Overall'},//
+            { id: 557, label: 'Kristian Vesalainen'},//
+            { id: 558, label: 'Tomas Tatar'},//
+            { id: 559, label: 'Nick Suzuki'},//
+            { id: 560, label: 'Max Pacioretty'},//
+            { id: 561, label: '2019 64th Overall'},//
+            { id: 562, label: '2019 126th Overall'},//
+            { id: 563, label: 'Mattias Norlinder'},//
+            { id: 564, label: 'Jacob Leguerrier'},//
+            { id: 565, label: 'Samuel Fagemo', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 566, label: 'Jakub Dvorak', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 567, label: 'Brandt Clarke', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 568, label: 'Cole Krygier', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 569, label: 'Angus Booth', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 570, label: 'Joe Hicketts', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 571, label: 'Jacob Ingham', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 572, label: 'Erik Portillo', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 572.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 573, label: '2023 86th Overall'},//
+            { id: 574, label: 'Gavin McCarthy'},//
+            { id: 575, label: 'Alexander Dergachyov', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 576, label: 'Bulat Shafigullin', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 577, label: 'Jack Hughes (2003)', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 578.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 578.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 578, label: '2022 103rd Overall'},
+            { id: 579, label: 'Taylor Raddysh', team: "CHI", color:'#CF0A2C'},
+            { id: 580, label: 'Boris Katchouk'},//
+            { id: 581, label: 'Brandon Hagel'},//
+            { id: 582, label: '2024 4th Round'},//
+            { id: 583, label: '2024 1st Round'},//
+            { id: 584, label: '2023 19th Overall'},//
+            { id: 585, label: 'Oliver Moore'},//
+            { id: 586, label: '2022 169th Overall'},
+            { id: 586.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 587, label: 'Jared Wright', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 588, label: 'Kenny Connors', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 589, label: 'Mitchell Stephens'},//
+            { id: 590, label: 'Ryan Conmy', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 591, label: 'Braden Doyle', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 592, label: '2020 140th Overall'},
+            { id: 592.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 592.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 593, label: 'Joel Edmundson'},//
+            { id: 594, label: '2020 159th Overall'},//
+            { id: 595, label: '2021 200th Overall'},//
+            { id: 596, label: 'Ben Meehan', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 597, label: 'Lucas Mercuri'},//
+            { id: 598, label: 'Yegor Naumov'},//
+            { id: 599, label: '2021 84th Overall'},
+            { id: 599.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 599.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 600, label: 'Milan Lucic'},//
+            { id: 601, label: 'James Neal'},//
+            { id: 602, label: '2021 168th Overall'},//
+            { id: 603, label: 'Kirill Kirsanov', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 604, label: 'Jack Beck'},//
+            { id: 605, label: 'Otto Salin', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 606, label: 'Jack Sparkes', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 607, label: 'Matthew Mania', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 608, label: 'Oscar Fantenberg'},//
+            { id: 609, label: '2020 112th Overall'},//
+            { id: 609.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 610, label: 'Juho Markkanen', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 611, label: 'Hampton Slukynsky', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 612, label: '2007 9th Overall'},
+            { id: 612.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 613, label: '2007 44th Overall'},//
+            { id: 614, label: '2008 87th Overall'},//
+            { id: 615, label: '2007 13th Overall'},//
+            { id: 616, label: 'Aaron Palushaj'},//
+            { id: 617, label: 'Ian Schultz'},//
+            { id: 618, label: 'Logan Couture', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 619, label: '2023 46th Overall'},//
+            { id: 620, label: 'Kalan Lind'},//
+            { id: 621, label: 'Erik Karlsson'},//
+            { id: 622, label: 'Dillon Hamaliuk'},//
+            { id: 623, label: 'Rem Pitlick'},//
+            { id: 624, label: '2026 3rd Round'},//
+            { id: 625, label: 'Jan Rutta', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 625.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 626, label: '2024 1st Round'},//
+            { id: 627, label: 'Casey DeSmith'},//
+            { id: 628, label: 'Nathan Legare'},//
+            { id: 629, label: 'Jeff Petry'},//
+            { id: 630, label: '2026 3rd Round'},//
+            { id: 631, label: '2017 31st Overall'},
+            { id: 631.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 631.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 631.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 631.4, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 632, label: 'Oskar Sundqvist'},//
+            { id: 633, label: 'Ryan Reaves'},//
+            { id: 634, label: '2017 51st Overall'},//
+            { id: 635, label: 'Zachary Lauzon'},//
+            { id: 636, label: 'Klim Kostin', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 637, label: 'Dmitri Samorukov'},//
+            { id: 638, label: 'Kailer Yamamoto', team: "SEA", color:'#99D9D9'},
+            { id: 639, label: 'Radek Simek'},//
+            { id: 640, label: '2024 7th Round'},//
+            { id: 641, label: 'Nico Sturm', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 642, label: 'Tyson Jost'},//
+            { id: 642.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 643, label: '2017 63rd Overall'},//
+            { id: 644, label: 'Eric Gelinas'},//
+            { id: 645, label: 'Collin Graf', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 646, label: 'William Eklund', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 647, label: 'Givani Smith', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 647.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 648, label: 'Michael Del Zotto'},//
+            { id: 649, label: 'Luke Kunin', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 649.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 649.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 650, label: 'Nick Bonino'},//
+            { id: 651, label: '2020 101st Overall'},//
+            { id: 652, label: '2020 37th Overall'},//
+            { id: 653, label: '2020 70th Overall'},//
+            { id: 654, label: 'Adam Wilsby'},//
+            { id: 655, label: 'Marat Khusnutdinov'},//
+            { id: 656, label: 'Eemil Viro'},//
+            { id: 658, label: 'John Leonard'},//
+            { id: 659, label: '2023 68th Overall'},//
+            { id: 660, label: 'Jesse Kiiskinen'},//
+            { id: 661, label: 'Jack Studnicka', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 661.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 661.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 662, label: 'Michael DiPietro'},//
+            { id: 663, label: 'Jonathan Myrenberg'},//
+            { id: 664, label: 'Nick Cicek', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 665, label: '2024 6th Round'},//
+            { id: 666, label: 'Filip Zadina', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 667, label: 'Miikka Kiprusoff'},//
+            { id: 668, label: '2005 35th Overall'},//
+            { id: 668.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 669, label: 'Marc-Edouard Vlasic', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 670, label: '2017 49th Overall'},
+            { id: 670.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 670.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 671, label: 'Lee Stempniak'},//
+            { id: 672, label: '2016 105th Overall'},//
+            { id: 673, label: 'Evan Cormier'},//
+            { id: 674, label: 'Mirco Mueller'},//
+            { id: 675, label: '2017 143rd Overall'},//
+            { id: 676, label: '2017 123rd Overall'},//
+            { id: 677, label: 'Marian Studenic'},//
+            { id: 678, label: 'Brandon Crawley'},//
+            { id: 679, label: 'Mario Ferraro', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 680, label: 'Slater Koekkoek'},//
+            { id: 681, label: '2019 151st Overall'},//
+            { id: 682, label: '2019 198th Overall'},//
+            { id: 683, label: 'Aku Raty'},//
+            { id: 684, label: 'Mikhail Shalagin'},//
+            { id: 685, label: 'Matt Benning', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 686, label: 'Kyle Burroughs', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 686.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 687, label: 'A.J. Greer'},//
+            { id: 688, label: 'Jack Thompson', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 689, label: 'Anthony Duclair'},//
+            { id: 690, label: '2025 7th Round'},//
+            { id: 691, label: '2024 3rd Round'},//
+            { id: 692, label: 'Calen Addison'},//
+            { id: 692.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 692.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 693, label: 'Jason Zucker'},//
+            { id: 694, label: 'Alex Galchenyuk'},//
+            { id: 695, label: '2021 26th Overall'},//
+            { id: 696, label: 'Carson Lambos'},//
+            { id: 697, label: 'Adam Raska'},//
+            { id: 698, label: '2026 5th Round'},//
+            { id: 699, label: '2018 73rd Overall'},
+            { id: 699.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 699.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 700, label: 'Marcus Kruger'},//
+            { id: 701, label: 'Jordan Martinook'},//
+            { id: 702, label: '2018 96th Overall'},
+            { id: 703, label: 'Luke Henman', team: "SEA", color:'#99D9D9'},
+            { id: 704, label: 'Patrick Nemeth'},//
+            { id: 705, label: '2025 2nd Round'},//
+            { id: 706, label: 'Ty Emberson', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 707, label: '2024 3rd Round'},//
+            { id: 707.1, label: '2024 3rd Round'},//
+            { id: 708, label: 'Henry Thrun', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 708.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 709, label: '2014 39th Overall'},
+            { id: 709.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 709.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 709.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 709.4, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 709.5, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 709.6, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 710, label: 'Devin Setoguchi'},//
+            { id: 711, label: 'Torey Mitchell'},//
+            { id: 712, label: 'Matt Moulson'},//
+            { id: 713, label: 'Cody McCormick'},//
+            { id: 714, label: '2016 45th Overall'},//
+            { id: 715, label: 'Chad Krys'},//
+            { id: 716, label: '2014 44th Overall'},//
+            { id: 717, label: '2014 74th Overall'},//
+            { id: 718, label: 'Eric Cornel'},//
+            { id: 719, label: 'Brycen Martin'},//
+            { id: 720, label: 'Vitek Vanecek', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 721, label: '2023 50th Overall'},
+            { id: 722, label: 'Carson Rehkopf', team: "SEA", color:'#99D9D9'},
+            { id: 723, label: '2022 37th Overall'},//
+            { id: 724, label: '2022 70th Overall'},//
+            { id: 725, label: '2022 46th Overall'},//
+            { id: 726, label: 'Ryan Chesley'},//
+            { id: 727, label: 'Alexander Suzdalev'},//
+            { id: 728, label: 'Seamus Casey'},//
+            { id: 729, label: 'Kaapo Kahkonen'},//
+            { id: 730, label: '2025 7th Round'},//
+            { id: 731, label: '2015 42nd Overall'},
+            { id: 731.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 731.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 731.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 732, label: 'Ludwig Karlsson'},//
+            { id: 733, label: 'Nick Paul'},//
+            { id: 734, label: 'Alexander Guptil'},//
+            { id: 735, label: 'Alex Chiasson'},//
+            { id: 736, label: 'Jason Spezza'},//
+            { id: 737, label: '2016 73rd Overall'},//
+            { id: 738, label: '2015 36th Overall'},//
+            { id: 739, label: 'Joey Anderson'},//
+            { id: 740, label: 'Gabriel Gagne'},//
+            { id: 741, label: 'MacKenzie Blackwood', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 742, label: '2023 164th Overall'},//
+            { id: 743, label: 'Cole Brown'},//
+            { id: 744, label: 'Georgii Romanov', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 745, label: '2022 27th Overall'},
+            { id: 745.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 745.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 745.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 746, label: '2022 92nd Overall'},//
+            { id: 747, label: 'Adam Engstrom'},//
+            { id: 748, label: 'Christian Dvorak'},//
+            { id: 749, label: '2024 2nd Round'},//
+            { id: 750, label: '2022 11th Overall'},//
+            { id: 751, label: '2022 34th Overall'},
+            { id: 752, label: '2022 45th Overall'},
+            { id: 753, label: 'Filip Bystedt', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 754, label: 'Conor Geekie'},//
+            { id: 755, label: 'Cameron Lund', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 756, label: 'Mattias Havelid', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 757, label: 'Jesperi Kotkaniemi'},//
+            { id: 758, label: 'David Edstrom', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 758.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 759, label: 'Tomas Hertl', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 760, label: '2025 3rd Round'},//
+            { id: 761, label: '2027 3rd Round'},//
+            { id: 762, label: '2025 1st Round'},//
+            { id: 763, label: 'Ty Dellandrea', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 764, label: '2025 4th Round'},//
+            { id: 765, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 766, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 767, label: 'Darcy Kuemper ', team: "LAK", color:'#572A84' ,font: {color:'#FFFFFF'}},
+            { id: 768, label: 'Barclay Goodrow', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 768.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 768.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 769, label: 'Anthony Greco'},//
+            { id: 770, label: '2020 31st Overall'},//
+            { id: 771, label: '2020 85th Overall'},//
+            { id: 772, label: 'Ozzy Wiesblatt'},//
+            { id: 773, label: 'Maxim Groshev'},//
+            { id: 774, label: '2022 223rd Overall'},//
+            { id: 775, label: 'Dyllan Gill'},//
+            { id: 776, label: '2019 45th Overall'},//
+            { id: 776.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 776.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 776.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 777, label: '2019 11th Overall'},//
+            { id: 778, label: '2019 14th Overall'},//
+            { id: 779, label: 'Victor Soderstrom'},//
+            { id: 780, label: 'Cam York'},//
+            { id: 781, label: '2019 34th Overall'},//
+            { id: 782, label: '2019 65th Overall'},//
+            { id: 783, label: 'Bobby Brink'},//
+            { id: 784, label: 'Alexander Campbell'},//
+            { id: 785, label: 'Egor Afanasyev', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 786, label: 'Kevin Bahl'},//
+            { id: 786.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 787, label: '2025 1st Round'},//
+            { id: 788, label: 'Kasper Halttunen', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 789, label: '2021 121st Overall'},
+            { id: 789.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 790, label: 'Nick Foligno', team: "CHI", color:'#CF0A2C'},
+            { id: 791, label: 'Stefan Noesen'},//
+            { id: 792, label: 'Ethan Cardwell', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 793, label: 'Mitchell Russell', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 794.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 794, label: 'Brenden Dillon'},//
+            { id: 795.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 795, label: '2021 87th Overall'},//
+            { id: 796, label: 'Dmitri Kostenko'},//
+            { id: 797, label: 'Scott Sabourin', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 797.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 798, label: 'Brett Sutter'},//
+            { id: 799, label: 'Jacob Peterson', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 799.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 800, label: 'Scott Reedy'},//
+            { id: 801, label: '2017 185th Overall'},
+            { id: 801.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 801.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 802, label: 'P.A. Parenteau'},//
+            { id: 803, label: '2017 205th Overall'},//
+            { id: 804, label: '2017 214th Overall'},//
+            { id: 805, label: 'Yegor Zaitsev'},//
+            { id: 806, label: 'Matthew Hellickson'},//
+            { id: 807, label: 'Sasha Chmelevski', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 808, label: 'Martin Kaut', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 808.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 809, label: 'Matt Nieto'},//
+            { id: 810, label: 'Jacob MacDonald'},//
+            { id: 811, label: 'Ryan Merkley'},//
+            { id: 812, label: 'Brandon Coe', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 812.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 812.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 813, label: '2020 98th Overall'},//
+            { id: 814, label: 'Nicolai Knyzhov', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 815, label: 'Valtteri Pulli', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 816, label: '2023 123rd Overall'},
+            { id: 816.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 816.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 817, label: 'Kurtis MacDermid'},//
+            { id: 818, label: 'Jaycob Megna'},//
+            { id: 819, label: 'Luca Cagnoni', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 166.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 820, label: 'J.T. Miller', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 820.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 821, label: 'Marek Mazanec'},//
+            { id: 822, label: '2023 123rd Overall'},//
+            { id: 823, label: '2019 71st Overall'},//
+            { id: 824, label: 'Artem Guryev', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 825, label: '2022 140th Overall'},
+            { id: 825.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 825.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 826, label: '2022 217th Overall'},
+            { id: 827, label: 'Devan Dubnyk'},//
+            { id: 828, label: 'Jake Furlong', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 829, label: 'Reese Laubach', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 830, label: 'Gannon Laroque', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 831, label: 'Magnus Chrona', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 831.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 832, label: 'Fredrik Claesson'},//
+            { id: 833, label: '2020 196th Overall'},
+            { id: 833.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 834, label: '2020 127th Overall'},//
+            { id: 835, label: '2020 206th Overall'},//
+            { id: 836, label: 'Alex Young', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 837, label: 'Evan Vierling'},//
+            { id: 838, label: 'Linus Oberg'},//
+            { id: 839, label: '2020 210th Overall'},
+            { id: 839.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 840, label: '2019 153rd Overall'},//
+            { id: 841, label: '2019 211th Overall'},//
+            { id: 842, label: 'Timofey Spitserov', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 843, label: 'Martin Has'},
+            { id: 844, label: 'Santeri Airola'},
+            { id: 845, label: '2021 177th Overall'},
+            { id: 845.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 846, label: '2021 81st Overall'},//
+            { id: 847, label: '2021 71st Overall'},//
+            { id: 848, label: 'Theo Jacobsson', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 849, label: 'Benjamin Gaudreau'},//
+            { id: 850, label: 'Simon Robertsson'},//
+            { id: 851, label: 'Joey Muldowney', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 852, label: '2023 71st Overall'},
+            { id: 852.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 852.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 853, label: 'Anthony DeAngelo'},//
+            { id: 854, label: '2022 220th Overall'},//
+            { id: 855, label: 'Brandon Svoboda', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 856, label: 'Alexis Gendron'},//
+            { id: 857, label: '2022 101st Overall'},//
+            { id: 858, label: 'Simon Forsmark'},//
+            { id: 859, label: '2024 2nd Round'},//
+            { id: 860, label: '2023 100th Overall'},//
+            { id: 861, label: 'Alexander Rykov'},//
+            { id: 862, label: 'David Klee', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 863, label: '2023 203rd Overall'},
+            { id: 863.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 863.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 864, label: 'Oliver Ekman-Larsson'},//
+            { id: 865, label: 'Conor Garland', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 866, label: 'Loui Eriksson'},//
+            { id: 867, label: 'Antoine Roussel'},//
+            { id: 868, label: '2021 9th Overall'},//
+            { id: 869, label: '2022 47th Overall'},//
+            { id: 870, label: 'Yegor Rimashevskiy', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 871, label: 'Dylan Guenther'},//
+            { id: 872, label: 'Hunter Haight'},//
+            { id: 873, label: '2022 204th Overall'},//
+            { id: 874, label: 'Adam Zlnka'},//
+            { id: 875, label: 'Yevgeny Kashnikov', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 876.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 877, label: 'Andrew Ladd'},//
+            { id: 878, label: '2021 60th Overall'},//
+            { id: 879, label: '2023 81st Overall'},//
+            { id: 880, label: 'J.J. Moser'},//
+            { id: 881, label: 'Tanner Ludtke'},//
+            { id: 882, label: 'Michael Fisher', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 883, label: '2022 195th Overall'},
+            { id: 883.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 884, label: 'Adin Hill', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 885, label: 'Josef Korenar'},//
+            { id: 886, label: '2022 43rd Overall'},//
+            { id: 887, label: 'Julian Lutz'},//
+            { id: 888, label: 'Eli Barnett', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 889, label: '2023 130th Overall'},
+            { id: 889.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 890, label: '2022 138th Overall'},//
+            { id: 891, label: 'Axel Landen', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 892, label: 'Sergei Ivanov'},//
+            { id: 893, label: 'Eric Pohlkamp', team: "SJS", color:'#006D75' ,font: {color:'#FFFFFF'}},
+            { id: 894, label: 'Jaden Schwartz', team: "SEA", color:'#99D9D9'},
+            { id: 895, label: '2013 89th Overall'},
+            { id: 895.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 896, label: '2013 50th Overall'},//
+            { id: 897, label: '2013 44th Overall'},//
+            { id: 898, label: 'Dillon Heatherington'},//
+            { id: 899, label: 'Tristan Jarry'},//
+            { id: 900, label: 'Yanni Gourde', team: "SEA", color:'#99D9D9'},
+            { id: 901, label: '2014 24th Overall'},
+            { id: 901.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 901.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 901.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 901.4, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 902, label: 'Luca Sbisa'},//
+            { id: 903, label: 'Ryan Kesler'},//
+            { id: 904, label: '2014 85th Overall'},//
+            { id: 905, label: '2015 84th Overall'},//
+            { id: 906, label: 'Jared McCann', team: "SEA", color:'#99D9D9'},
+            { id: 907, label: 'Keggan Iverson'},//
+            { id: 908, label: 'Deven Sideroff'},//
+            { id: 909, label: '2016 140th Overall'},//
+            { id: 910, label: 'Cole Candella'},//
+            { id: 911, label: '2016 33rd Overall'},//
+            { id: 912, label: '2016 94th Overall'},//
+            { id: 913, label: 'Rasmus Asplund'},//
+            { id: 914, label: 'Jonathan Ang'},//
+            { id: 915, label: 'Derick Brassard'},//
+            { id: 916, label: 'Riley Sheahan'},//
+            { id: 917, label: 'Nick Bjugstad'},//
+            { id: 918, label: '2016 33rd Overall'},//
+            { id: 919, label: 'Vladislav Kolyachonok'},//
+            { id: 920, label: 'Filip Hallander'},//
+            { id: 921, label: '2023 217th Overall'},//
+            { id: 922, label: 'Emil Jarventie'},//
+            { id: 923, label: '2008 22nd Overall'},
+            { id: 924, label: 'Chris Pronger'},//
+            { id: 925, label: 'Joffrey Lupul'},//
+            { id: 926, label: 'Ladislav Smid'},//
+            { id: 927, label: '2007 30th Overall'},//
+            { id: 928, label: '2008 53rd Overall'},//
+            { id: 929, label: 'Nick Ross'},//
+            { id: 930, label: 'Travis Hamonic'},//
+            { id: 931, label: 'Brandon Tanev', team: "SEA", color:'#99D9D9'},
+            { id: 932, label: 'Tye Kartye', team: "SEA", color:'#99D9D9'},
+            { id: 933, label: 'Eeli Tolvanen', team: "SEA", color:'#99D9D9'},
+            { id: 934, label: 'Matthew Beniers', team: "SEA", color:'#99D9D9'},
+            { id: 935, label: 'Vince Dunn', team: "SEA", color:'#99D9D9'},
+            { id: 936, label: 'Jamie Oleksiak', team: "SEA", color:'#99D9D9'},
+            { id: 936.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 937, label: 'Adam Larsson', team: "SEA", color:'#99D9D9'},
+            { id: 937.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 938, label: 'Taylor Hall (1991)', team: "CHI", color:'#CF0A2C'},
+            { id: 939, label: '2008 53rd Overall'},
+            { id: 939.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 939.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 939.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 940, label: '2008 17th Overall'},//
+            { id: 941, label: '2008 48th Overall'},//
+            { id: 942, label: 'Mike Cammalleri'},//
+            { id: 943, label: 'Jake Gardiner'},//
+            { id: 944, label: 'Mitch Wahl'},//
+            { id: 945, label: 'Patrick O-Sullivan'},//
+            { id: 946, label: 'Justin Williams'},//
+            { id: 947, label: 'Brian Dumoulin', team: "SEA", color:'#99D9D9'},
+            { id: 948, label: 'Jordan Staal'},//
+            { id: 949, label: 'Brandon Sutter'},//
+            { id: 950, label: '2012 8th Overall'},//
+            { id: 951, label: 'Derrick Pouliot'},//
+            { id: 952, label: 'William Borgen', team: "SEA", color:'#99D9D9'},
+            { id: 953, label: 'Ryker Evans', team: "SEA", color:'#99D9D9'},
+            { id: 954, label: '2010 112th Overall'},
+            { id: 954.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 954.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 954.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 955, label: 'Matt Jones'},//
+            { id: 956, label: '2010 202nd Overall'},//
+            { id: 957, label: 'Kellen Jones'},//
+            { id: 958, label: '2010 116th Overall'},//
+            { id: 959, label: '2010 146th Overall'},//
+            { id: 960, label: 'Petter Granberg'},//
+            { id: 961, label: 'Daniel Brodin'},//
+            { id: 962, label: 'Philipp Grubauer', team: "SEA", color:'#99D9D9'},
+            { id: 963, label: 'Brooks Orpik'},//
+            { id: 964, label: '2018 47th Overall'},//
+            { id: 965, label: 'Kody Clark'},//
+            { id: 966, label: 'Joey Daccord', team: "SEA", color:'#99D9D9'},
+            { id: 967, label: 'Oskar Fisker Molgaard', team: "SEA", color:'#99D9D9'},
+            { id: 968, label: 'Eduard Sale', team: "SEA", color:'#99D9D9'},
+            { id: 969, label: 'Jagger Firkus', team: "SEA", color:'#99D9D9'},
+            { id: 970.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 970, label: 'Sam Bennett'},//
+            { id: 971, label: 'Emil Heineman'},//
+            { id: 972, label: '2022 187th Overall'},//
+            { id: 973, label: 'Gustav Karlsson'},//
+            { id: 974, label: '2022 49th Overall'},
+            { id: 974.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 975, label: 'Jeremy Lauzon'},//
+            { id: 976, label: 'Jani Nyman', team: "SEA", color:'#99D9D9'},
+            { id: 977, label: 'Shane Wright', team: "SEA", color:'#99D9D9'},
+            { id: 978, label: 'Lleyton Roed', team: "SEA", color:'#99D9D9'},
+            { id: 979, label: 'Ryan Winterton', team: "SEA", color:'#99D9D9'},
+            { id: 980, label: 'Jacob Melanson', team: "SEA", color:'#99D9D9'},
+            { id: 981, label: 'Ville Petman', team: "SEA", color:'#99D9D9'},
+            { id: 982, label: '2023 57th Overall'},
+            { id: 982.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 983, label: 'Mark Giordano'},//
+            { id: 984, label: 'Colin Blackwell'},//
+            { id: 985, label: '2022 58th Overall'},
+            { id: 986, label: '2024 3rd Round'},//
+            { id: 987, label: 'Lukas Dragicevic', team: "SEA", color:'#99D9D9'},
+            { id: 988, label: 'Niklas Kokko', team: "SEA", color:'#99D9D9'},
+            { id: 989, label: 'Ville Ottavainen', team: "SEA", color:'#99D9D9'},
+            { id: 990, label: 'Caden Price', team: "SEA", color:'#99D9D9'},
+            { id: 991, label: 'Ty Nelson', team: "SEA", color:'#99D9D9'},
+            { id: 992, label: 'Cale Fleury', team: "SEA", color:'#99D9D9'},
+            { id: 993, label: 'Gustav Olofsson', team: "SEA", color:'#99D9D9'},
+            { id: 993.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 994, label: 'Will Bitten'},//
+            { id: 995, label: 'Peetro Seppala', team: "SEA", color:'#99D9D9'},
+            { id: 996, label: 'Victor Ostman', team: "SEA", color:'#99D9D9'},
+            { id: 997, label: 'Justin Janicke', team: "SEA", color:'#99D9D9'},
+            { id: 997.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 998, label: '2022 117th Overall'},//
+            { id: 999, label: '2022 132nd Overall'},//
+            { id: 1000, label: 'Cole Spicer'},//
+            { id: 1001, label: 'Frederic Brunet'},//
+            { id: 1002, label: 'Barrett Hall', team: "SEA", color:'#99D9D9'},
+            { id: 1003, label: 'Andrei Loshko', team: "SEA", color:'#99D9D9'},
+            { id: 1004, label: 'Zeb Forsfjall', team: "SEA", color:'#99D9D9'},
+            { id: 1005, label: 'Zaccharya Wisdom', team: "SEA", color:'#99D9D9'},
+            { id: 1006, label: 'Tyson Jugnauth', team: "SEA", color:'#99D9D9'},
+            { id: 1007, label: 'Kaden Hammell', team: "SEA", color:'#99D9D9'},
+            { id: 1008, label: 'Semyon Vyazovoy', team: "SEA", color:'#99D9D9'},
+            { id: 1009, label: '2023 168th Overall'},
+            { id: 1009.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1010, label: 'Daniel Sprong'},// 
+            { id: 1011, label: 'Visa Vedenpaa', team: "SEA", color:'#99D9D9'},
+            { id: 1012, label: 'Elias Pettersson (1998)', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1013, label: 'Ryan McDonagh'},// 
+            { id: 1014, label: 'Libor Hajek'},// 
+            { id: 1015, label: 'Vladislav Namestnikov'},// 
+            { id: 1016, label: 'Brett Howden', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1017, label: '2019 58th Overall'},// 
+            { id: 1018, label: 'Daniel Sprong'},// 
+            { id: 1019, label: 'Nils Lundkvist'},// 
+            { id: 1020, label: 'Karl Henriksson'},// 
+            { id: 1021, label: 'Brock Boeser', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1022, label: 'Ilya Mikheyev', team: "CHI", color:'#CF0A2C'},
+            { id: 1023, label: 'Pius Suter', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1024, label: 'Nils Hoglander', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1025, label: 'Vasily Podkolzin', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1026, label: '2020 167th Overall'},
+            { id: 1026.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1027, label: '2020 87th Overall'},// 
+            { id: 1028, label: 'Nils Aman', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1029, label: 'Justin Sourdif'},// 
+            { id: 1030, label: 'Phillip Di Giuseppe', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1031, label: 'Quinn Hughes', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1032, label: '2016 53rd Overall'},// 
+            { id: 1032.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1032.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1033, label: 'Pavel Datsyuk'},// 
+            { id: 1034, label: 'Joe Vitale'},// 
+            { id: 1035, label: '2016 16th Overall'},// 
+            { id: 1036, label: '2016 20th Overall'},// 
+            { id: 1037, label: 'Filip Hronek', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1038, label: 'Jakob Chychrun'},// 
+            { id: 1039, label: 'Dennis Cholowski'},// 
+            { id: 1040, label: '2023 105th Overall'},
+            { id: 1041, label: '2023 17th Overall'},// 
+            { id: 1042, label: '2023 43rd Overall'},// 
+            { id: 1043, label: 'Ty Mueller', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1044, label: 'Axel Sandin Pellikka'},// 
+            { id: 1045, label: 'Felix Nilsson'},// 
+            { id: 1046, label: 'Carson Soucy', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1047, label: '2013 127th Overall'},
+            { id: 1047.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1047.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1048, label: 'Jordan Henry'},// 
+            { id: 1049, label: 'Dennis Wideman'},// 
+            { id: 1050, label: '2013 61st Overall'},// 
+            { id: 1051, label: '2013 84th Overall'},// 
+            { id: 1052, label: '2013 114th Overall'},// 
+            { id: 1053, label: 'Zach Sanford'},// 
+            { id: 1054, label: 'Jimmy Lodge'},// 
+            { id: 1055, label: 'Jan Kostalek'},// 
+            { id: 1056, label: 'Tucker Poolman', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1057, label: '2013 61st Overall'},
+            { id: 1057.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1057.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1058, label: 'Andrej Meszaros'},// 
+            { id: 1059, label: 'Mark Friedman', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1060, label: 'Ty Glover', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1061, label: 'Jack Rathbone'},// 
+            { id: 1062, label: 'Karel Plasek'},// 
+            { id: 1063, label: 'Noah Juulsen', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1063.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1064, label: 'Juho Lammikko'},// 
+            { id: 1065, label: 'Olli Juolevi'},// 
+            { id: 1066, label: 'Thatcher Demko', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1067, label: '2019 156th Overall'},
+            { id: 1067.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1068, label: 'Mike McKenna'},// 
+            { id: 1069, label: 'Tom Pyatt'},// 
+            { id: 1070, label: 'Anders Nilsson'},// 
+            { id: 1071, label: 'Darren Archibald'},// 
+            { id: 1072, label: 'Arturs Silovs', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1073, label: 'Jonathan Lekkerimaki', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1074, label: 'Max Sasson', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1075, label: 'Tristen Nielsen', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1076, label: '2021 95th Overall'},
+            { id: 1076.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1076.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1077, label: 'Eric Staal'},// 
+            { id: 1078, label: 'Josh Bloom', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1079, label: '2021 159th Overall'},// 
+            { id: 1080, label: 'Viljami Marjala'},// 
+            { id: 1081, label: 'Riley Stillman'},// 
+            { id: 1082, label: '2021 52nd Overall'},
+            { id: 1082.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1082.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1082.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1083, label: 'Andreas Athanasiou', team: "CHI", color:'#CF0A2C'},
+            { id: 1084, label: 'Ryan Kuffner'},// 
+            { id: 1085, label: 'Sam Gagner'},// 
+            { id: 1086, label: '2020 45th Overall'},// 
+            { id: 1087, label: 'Richard Panik'},// 
+            { id: 1088, label: 'Nick Leddy'},// 
+            { id: 1089, label: 'Aatu Raty', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1090, label: 'Bo Horvat'},// 
+            { id: 1091, label: 'Anthony Beauvilier'},// 
+            { id: 1092, label: 'Danila Klimovich', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1093, label: 'Arshdeep Bains', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1094, label: '2018 87th Overall'},
+            { id: 1094.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1094.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1094.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1094.4, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1094.5, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1095, label: '2018 46th Overall'},// 
+            { id: 1096, label: 'Martin Fehervary'},// 
+            { id: 1097, label: 'Michael Kempny'},// 
+            { id: 1098, label: '2018 74th Overall'},// 
+            { id: 1099, label: '2018 142nd Overall'},// 
+            { id: 1100, label: 'Niklas Nordgren (2000)'},// 
+            { id: 1101, label: 'Michael Callahan'},// 
+            { id: 1102, label: '2018 145th Overall'},// 
+            { id: 1103, label: '2018 114th Overall'},// 
+            { id: 1104, label: 'Dennis Busby'},// 
+            { id: 1105, label: 'Ivan Prosvetov'},// 
+            { id: 1106, label: 'Linus Karlsson', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1107, label: 'Jonathan Dahlen'},// 
+            { id: 1108, label: 'Vitali Kravtsov', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1108.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1109, label: 'William Lockwood'},// 
+            { id: 1110, label: '2026 7th Round'},// 
+            { id: 1111, label: 'Aidan McDonough', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1112, label: 'Christian Felton', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1113, label: '2022 80th Overall'},
+            { id: 1113.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1113.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1113.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1114, label: 'Nate Schmidt'},// 
+            { id: 1115, label: 'Nick Holden'},// 
+            { id: 1116, label: 'Evgenii Dadonov'},// 
+            { id: 1117, label: 'Elias Pettersson (2004)', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1118, label: '2023 89th Overall'},
+            { id: 1118.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1119, label: 'Luke Schenn'},//
+            { id: 1120, label: 'Sawyer Mynio', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1121, label: 'Kirill Kudryavtsev', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1122, label: 'Akito Hirose', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1123, label: '2015 66th Overall'},
+            { id: 1123.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1124, label: '2016 194th Overall'},//
+            { id: 1125, label: 'Brett McKenzie'},//
+            { id: 1126, label: 'Guillaume Brisebois', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1127, label: '2016 107th Overall'},
+            { id: 1127.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1127.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1127.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1127.4, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1128, label: 'Zach Sill'},//
+            { id: 1129, label: '2016 61st Overall'},//
+            { id: 1130, label: 'Kasper Bjorkvist'},//
+            { id: 1131, label: 'Martin Marincin'},//
+            { id: 1132, label: 'Brad Ross'},//
+            { id: 1133, label: 'Eric Gryba'},//
+            { id: 1134, label: 'Travis Ewanyk'},//
+            { id: 1135, label: 'Michael Amadio'},//
+            { id: 1136, label: 'Christian Wolanin', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1137, label: 'Cole McWard', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1138, label: 'Filip Johansson', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1139, label: 'Jett Woo', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1140, label: 'Nikita Tolopilo', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1141, label: 'Ty Young', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1142, label: 'Jackson Kunz', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1143, label: 'Lucas Forsell', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1144, label: 'Daimon Gardner', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1145, label: 'Vilmer Alriksson', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1146, label: '2023 119th Overall'},
+            { id: 1146.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1147, label: 'Tyler Motte'},//
+            { id: 1148, label: 'Matthew Perkins', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1149, label: 'Jacob Truscott', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1150, label: 'Hugo Gabrielson', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1151, label: 'Jackson Dorrington', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1152, label: 'Tom Willander', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1153, label: 'Aiden Celebrini', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1154, label: 'Aku Koskenvuo', team: "VAN", color:'#00205B' ,font: {color:'#FFFFFF'}},
+            { id: 1155, label: 'Jack Eichel', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1155.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1156, label: 'Alex Tuch'},//
+            { id: 1157, label: 'Peyton Krebs'},//
+            { id: 1158, label: '2022 16th Overall'},//
+            { id: 1159, label: '2023 77th Overall'},
+            { id: 1160, label: '2023 64th Overall'},//
+            { id: 1161, label: 'Noah Ostlund'},//
+            { id: 1162, label: 'Mathieu Cataford', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1163, label: 'Riley Heidt'},//
+            { id: 1164, label: '2010 178th Overall'},
+            { id: 1164.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1164.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1164.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1165, label: '2009 189th Overall'},//
+            { id: 1166, label: 'Marek Viedensky'},//
+            { id: 1167, label: 'Alex Auld'},//
+            { id: 1168, label: 'Mark Stone', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1169, label: 'Tobias Lindberg'},//
+            { id: 1170, label: 'Erik Brannstrom'},//
+            { id: 1171, label: 'Oscar Lindberg'},//
+            { id: 1172, label: '2009 189th Overall'},//
+            { id: 1173, label: 'Egor Sokolov'},//
+            { id: 554.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1174, label: 'Rene Bourque'},//
+            { id: 1175, label: 'James Wisniewski'},//
+            { id: 1176, label: '2015 58th Overall'},//
+            { id: 1177, label: '2015 80th Overall'},//
+            { id: 1178, label: 'Kevin Stenlund'},//
+            { id: 1179, label: 'Brent Gates'},//
+            { id: 1180, label: '2014 33rd Overall'},//
+            { id: 1180.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1180.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1181, label: 'Magnus Paajarvi'},//
+            { id: 1182, label: 'David Perron'},//
+            { id: 1183, label: '2015 94th Overall'},//
+            { id: 1184, label: '2015 86th Overall'},//
+            { id: 1185, label: 'Adam Musil'},//
+            { id: 1186, label: 'Mike Robinson'},//
+            { id: 1187, label: 'Ivan Barbashev', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1188, label: 'Zach Dean'},//
+            { id: 1189, label: 'Nicolas Roy', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1189.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1190, label: 'Erik Haula'},//
+            { id: 1191, label: '2021 155th Overall'},//
+            { id: 1192, label: 'Oscar Plandowski'},//
+            { id: 1016.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1193, label: 'Nick Desimone'},//
+            { id: 1194, label: '2022 111th Overall'},//
+            { id: 1195, label: 'Noah Laba'},//
+            { id: 1196, label: 'Keegan Kolesar', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1196.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1197, label: '2017 45th Overall'},//
+            { id: 1198, label: 'Alexandre Texier'},//
+            { id: 1199, label: 'Brendan Brisson', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1200, label: '2018 115th Overall'},
+            { id: 1200.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1200.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1201, label: 'Mark Streit'},//
+            { id: 1202, label: 'Nikita Gusev'},//
+            { id: 1203, label: 'Paul Cotter', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1204, label: 'Jonas Rondbjerg', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1205, label: 'Pavel Dorofeyevr', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1206, label: 'Alex Pietrangelo', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 216.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1207, label: 'Michael Ferland'},//
+            { id: 1208, label: 'Adam Fox'},//
+            { id: 1209, label: 'Dougie Hamilton'},//
+            { id: 1210, label: 'Shea Theodore', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1210.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1211, label: 'Clayton Stoner'},//
+            { id: 1212, label: '2009 66th Overall'},
+            { id: 1212.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1212.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1212.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1213, label: '2007 33rd Overall'},//
+            { id: 1214, label: 'Dan Cloutier'},//
+            { id: 1215, label: 'Taylor Ellington'},//
+            { id: 1216, label: 'Steve Bernier'},//
+            { id: 1217, label: '2010 55th Overall'},//
+            { id: 1218, label: 'Petr Straka'},//
+            { id: 1219, label: 'Brayden McNabb', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1220, label: 'Jonathan Parker'},//
+            { id: 1221, label: 'Hudson Fasching'},//
+            { id: 1222, label: '2015 43rd Overall'},//
+            { id: 1223, label: '2014 60th Overall'},//
+            { id: 1224, label: 'Erik Cernak'},//
+            { id: 1225, label: 'Alex Lintuniemi'},//
+            { id: 1226, label: 'Zach Whitecloud', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1227, label: 'Nicolas Hague', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1228, label: '2009 46th Overall'},
+            { id: 1228.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1228.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1228.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1229, label: 'Antoine Vermette'},//
+            { id: 1230, label: 'Pascal Leclaire'},//
+            { id: 1231, label: 'Robin Lehner', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1232, label: 'David Legwand'},//
+            { id: 1233, label: '2015 21st Overall'},//
+            { id: 1234, label: 'Colin White (1997)'},//
+            { id: 1235, label: 'Malcolm Subban'},//
+            { id: 1236, label: 'Slava Demin'},//
+            { id: 1237, label: 'Martins Dzierkals', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1238, label: '2020 46th Overall'},//
+            { id: 1239, label: '2020 153rd Overall'},//
+            { id: 1240, label: 'Drew Commesso'},//
+            { id: 1241, label: 'Kasper Puutio'},//
+            { id: 1242, label: '2015 76th Overall'},
+            { id: 1242.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1242.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1243, label: '2015 83rd Overall'},//
+            { id: 1244, label: '2015 60th Overall'},//
+            { id: 1245, label: 'Jens Looke'},//
+            { id: 1246, label: 'Oliver Kylington'},//
+            { id: 1247, label: '2024 4th Round'},//
+            { id: 1248, label: 'Logan Thompson', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1249, label: '2021 128th Overall'},
+            { id: 1249.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1249.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1250, label: 'David Savard'},//
+            { id: 1251, label: 'Brian Lashoff'},//
+            { id: 1252, label: '2021 38th Overall'},
+            { id: 1253, label: '2021 36th Overall'},//
+            { id: 1254, label: 'Daniil Chayka', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1255, label: 'Shai Buium'},//
+            { id: 1256, label: 'Jakub Demek', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1257, label: '2015 60th Overall'},
+            { id: 1257.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1257.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1257.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1258, label: 'Travis Dermott'},//
+            { id: 1259, label: '2022 95th Overall'},
+            { id: 1260, label: '2022 135th Overall'},//
+            { id: 1261, label: 'Jordan Gustafson', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1262, label: 'Nicholas Moldenhauer'},//
+            { id: 1263, label: 'Nikita Grebenkin'},//
+            { id: 1263.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1264, label: 'Sam Lafferty'},//
+            { id: 1265, label: '2027 2nd Round'},//
+            { id: 1266, label: '2027 4th Round'},//
+            { id: 1267, label: '2021 102nd Overall'},
+            { id: 1267.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1268, label: '2021 114th Overall'},//
+            { id: 1269, label: 'Jakub Brabenec', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1270, label: 'Redmond Savage'},//
+            { id: 1271, label: 'Ben Hemmerling', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1272, label: 'Matyas Sapovaliv', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1273, label: 'Mason Geersten', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1274, label: 'Grigori Denisenko', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1275, label: 'Gage Quinney', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1276, label: 'Mason Morelli', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1277, label: 'Ivan Morozov', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1278, label: 'Mason Primeau', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1279, label: 'Dysin Mayo', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1279.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1280, label: 'Shea Weber'},//
+            { id: 1281, label: '2023 160th Overall'},//
+            { id: 1282, label: 'Justin Kipkie'},//
+            { id: 1283, label: 'Christoffer Sedoff', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1284, label: 'Joe Fleming (2003)', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1284.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1284.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1284.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1285, label: 'Blake Speers'},//
+            { id: 1286, label: 'Nicholas Merkley'},//
+            { id: 1287, label: '2020 18th Overall'},//
+            { id: 1288, label: '2021 75th Overall'},//
+            { id: 1289, label: 'Dawson Mercer'},//
+            { id: 1290, label: 'Ryder Korczak'},//
+            { id: 1291, label: 'Curtis Lazar'},//
+            { id: 1292, label: 'Anders Bjork'},//
+            { id: 1293, label: '2021 53rd Overall'},//
+            { id: 1294, label: 'Aleksandr Kisakov'},//
+            { id: 1295, label: 'Ian Mitchell'},//
+            { id: 1296, label: 'Alec Regula'},//
+            { id: 1297, label: '2020 68th Overall'},
+            { id: 1297.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1298, label: 'Lukas Cormier', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1299, label: '2019 41st Overall'},
+            { id: 1299.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1299.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1300, label: 'Justin Braun'},//
+            { id: 1301, label: '2019 82nd Overall'},//
+            { id: 1302, label: '2019 41st Overall'},//
+            { id: 1303, label: 'Artemi Kniazev'},//
+            { id: 1304, label: 'Michael Vukojevic'},//
+            { id: 1305, label: 'Kaedan Korczak', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1306, label: '2019 86th Overall'},
+            { id: 1306.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1307, label: 'Alexei Emelin'},//
+            { id: 1308, label: 'Layton Ahac', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1309, label: '2020 125th Overall'},
+            { id: 1309.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1310, label: '2022 113th Overall'},//
+            { id: 1311, label: 'Amadeus Lombardi'},//
+            { id: 1312, label: 'Jesper Vikman', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1313, label: 'Carl Lindblom', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1314, label: '2015 68th Overall'},
+            { id: 1314.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1314.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1315, label: 'Michael Leighton'},//
+            { id: 1316, label: 'Steve Mason'},//
+            { id: 1317, label: '2015 34th Overall'},//
+            { id: 1318, label: 'Ryder Donovan', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1319, label: 'Jackson Hallum', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1320, label: 'Tuomas Uronen', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1321, label: 'Noah Ellis', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1322, label: 'Artur Cholach', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1323, label: 'Abram Wiebe', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1324, label: 'Arttu Karki', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1325, label: '2022 128th Overall'},
+            { id: 1325.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1325.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1326, label: '2021 126th Overall'},//
+            { id: 1327, label: 'Dylan Duke'},//
+            { id: 1328, label: '2023 128th Overall'},//
+            { id: 1329, label: 'Quentin Miller'},//
+            { id: 1330, label: 'Cameron Whitehead', team: "VGK", color:'#B4975A' ,font: {color:'#FFFFFF'}},
+            { id: 1331, label: '2021 25th Overall'},//
+            { id: 1332, label: '2022 122nd Overall'},//
+            { id: 1333, label: 'Corson Ceulemans'},//
+            { id: 1334, label: 'Dennis Hildeby'},//
+            { id: 1335, label: '2013 29th Overall'},
+            { id: 1335.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1335.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1335.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1336, label: 'Lane MacDermid'},//
+            { id: 1337, label: 'Cody Payne'},//
+            { id: 1338, label: 'Jaromir Jagr'},//
+            { id: 1339, label: 'Jason Dickinson', team: "CHI", color:'#CF0A2C'},
+            { id: 1341, label: 'Ayrton Martino'},//
+            { id: 1340, label: '2021 73rd Overall'},//
+            { id: 1342, label: '2024 2nd Round'},//
+            { id: 1343, label: '2018 120th Overall'},//
+            { id: 1343.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1344, label: 'Victor Ejdsell'},//
+            { id: 1345, label: 'Ryan Hartman'},//
+            { id: 1346, label: '2018 27th Overall'},//
+            { id: 1347, label: '2018 131st Overall'},//
+            { id: 1348, label: 'Nicolas Beaudin'},//
+            { id: 1349, label: 'Spencer Stastney'},//
+            { id: 1350, label: 'Philipp Kurashev', team: "CHI", color:'#CF0A2C'},
+            { id: 1351.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1352, label: 'Charlie Coyle'},//
+            { id: 1353, label: '2019 99th Overall'},//
+            { id: 1354, label: 'Cade Webber'},//
+            { id: 1355, label: 'Lukas Reichel', team: "CHI", color:'#CF0A2C'},
+            { id: 1356, label: '2022 13th Overall'},
+            { id: 1356.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1356.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1357, label: 'Kirby Dach'},//
+            { id: 1358, label: '2022 66th Overall'},//
+            { id: 1359, label: 'Gavin Hayes'},//
+            { id: 1360, label: '2022 98th Overall'},//
+            { id: 1361, label: 'Isaiah George'},//
+            { id: 1362, label: 'Frank Nazar', team: "CHI", color:'#CF0A2C'},
+            { id: 1363, label: 'Connor Bedard', team: "CHI", color:'#CF0A2C'},
+            { id: 1364, label: 'Landon Slaggert', team: "CHI", color:'#CF0A2C'},
+            { id: 1365, label: '2017 69th Overall'},
+            { id: 1365.1, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1365.2, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1365.3, label: 'Trade', color:'#000000' ,font: {color:'#FFFFFF'}},
+            { id: 1366, label: 'Dylan Sadowy'},//
+            { id: 1367, label: 'Maxim Letunov'},//
+            { id: 1368, label: '2017 159th Overall'},//
+            { id: 1369, label: 'Jacob McGrew'},//
+            { id: 1370, label: 'MacKenzie Entwistle', team: "CHI", color:'#CF0A2C'},
+            { id: 1371, label: 'Jordan Malette'},//
+            { id: 1372, label: 'Andrew Campbell'},//
+            { id: 1373, label: 'Marian Hossa'},//
+            { id: 1374, label: 'Vinnie Hinostroza'},//
+            { id: 1375, label: 'Jordan Oesterle'},//
+            { id: 1376, label: '2019 74th Overall'},//
+            { id: 1377, label: '2019 138th Overall'},//
+            { id: 1378, label: 'Frederik Nissen Dichow'},//
+
+
+            
+            
+            
+
+
+
+            
+            
+
+
+            
+            
+
+        ]);//*
+
+        // Define the edges 
+        var edges = new vis.DataSet([
+            
+            { from: 7.1, to: 5 },
+            { from: 7.1, to: 6 },
+            { from: 7.1, to: 7 },
+            { from: 8.1, to: 8},
+            { from: 8.1, to: 9},
+            { from: 8.1, to: 11 },
+            { from: 9, to: 10, arrows: 'to'  },
+            { from: 11, to: 12, arrows: 'to'  },
+            { from: 14.1, to: 13 },
+            { from: 14.1, to: 14 },
+            { from: 13, to: 15, arrows: 'to'  },
+            { from: 17.1, to: 15 },
+            { from: 17.1, to: 16 },
+            { from: 17.1, to: 17 },
+            { from: 20.1, to: 18 },
+            { from: 20.1, to: 19 },
+            { from: 20.1, to: 20 },
+            { from: 20.1, to: 12 },
+            { from: 20.1, to: 21, arrows: 'to'  },
+            { from: 25.1, to: 24 },
+            { from: 25.1, to: 25 },
+            { from: 25.1, to: 23 },
+            { from: 34.1, to: 33 },
+            { from: 34.1, to: 34 },
+            { from: 38.1, to: 35 },
+            { from: 38.1, to: 36 },
+            { from: 38.1, to: 38 },
+            { from: 38.1, to: 33 },
+            { from: 36, to: 37, arrows: 'to'  },
+            { from: 38, to: 39, arrows: 'to'  },
+            { from: 46, to: 47, arrows: 'to' },
+            { from: 48, to: 49, arrows: 'to' },
+            { from: 42.1, to: 42 },
+            { from: 42.1, to: 43 },
+            { from: 42.1, to: 44 },
+            { from: 42.1, to: 45 },
+            { from: 42.1, to: 46 },
+            { from: 42.1, to: 48 },
+            { from: 42.1, to: 50 },
+            { from: 51.1, to: 51 },
+            { from: 51.1, to: 52 },
+            { from: 51.1, to: 53 },
+            { from: 56, to: 55, arrows: 'to' },
+            { from: 56.1, to: 56 },
+            { from: 56.1, to: 57 },
+            { from: 56.1, to: 59 },
+            { from: 57, to: 58 },
+            { from: 59, to: 60 },
+            { from: 66, to: 64, arrows: 'to' },
+            { from: 66.1, to: 65 },
+            { from: 66.1, to: 66 },
+            { from: 69.1, to: 69 },
+            { from: 69.1, to: 70 },
+            { from: 71.1, to: 74 },
+            { from: 71, to: 72, arrows: 'to' },
+            { from: 71.1, to: 73 },
+            { from: 71.1, to: 76 },
+            { from: 71.1, to: 71 },
+            { from: 71.1, to: 78 },
+            { from: 72.2, to: 72 },
+            { from: 72.2, to: 72.1 },
+            { from: 74, to: 75, arrows: 'to'  },
+            { from: 76, to: 77, arrows: 'to'  },
+            { from: 78, to: 79, arrows: 'to'  },
+            { from: 82, to: 81, arrows: 'to'  },
+            { from: 86, to: 87, arrows: 'to'  },
+            { from: 82.1, to: 82 },
+            { from: 82.1, to: 83 },
+            { from: 82.1, to: 84 },
+            { from: 82.1, to: 85 },
+            { from: 82.1, to: 86 },
+            { from: 89, to: 90, arrows: 'to'  },
+            { from: 94.1, to: 91 },
+            { from: 94.1, to: 92 },
+            { from: 92, to: 93, arrows: 'to'  },
+            { from: 94.1, to: 89 },
+            { from: 94.1, to: 94 },
+            { from: 96.1, to: 95 },
+            { from: 96.1, to: 89 },
+            { from: 96.1, to: 96 },
+            { from: 99, to: 98, arrows: 'to'  },
+            { from: 99.1, to: 99 },
+            { from: 99.1, to: 100 },
+            { from: 99.1, to: 101 },
+            { from: 101, to: 102, arrows: 'to'  },
+            { from: 98.1, to: 103 },
+            { from: 98.1, to: 104 },
+            { from: 98.1, to: 105 },
+            { from: 98.1, to: 98 },
+            { from: 107, to: 108, arrows: 'to'  },
+            { from: 109, to: 110, arrows: 'to'  },
+            { from: 107.1, to: 109  },
+            { from: 107.1, to: 107  },
+            { from: 114, to: 113, arrows: 'to'  },
+            { from: 114.1, to: 115  },
+            { from: 114.1, to: 114  },
+            { from: 119, to: 116, arrows: 'to'  },
+            { from: 117.1, to: 117  },
+            { from: 117.1, to: 118  },
+            { from: 117.1, to: 119  },
+            { from: 122, to: 121, arrows: 'to'  },
+            { from: 122.1, to: 123  },
+            { from: 122.1, to: 124  },
+            { from: 122.1, to: 125  },
+            { from: 122.1, to: 122  },
+            { from: 122.1, to: 58  },
+            { from: 78, to: 127  },
+            { from: 127, to: 128, arrows: 'to'  },
+            { from: 134, to: 135, arrows: 'to'  },
+            { from: 134.1, to: 136  },
+            { from: 134.1, to: 134  },
+            { from: 134.1, to: 137  },
+            { from: 139, to: 138, arrows: 'to'  },
+            { from: 139.1, to: 139  },
+            { from: 139.1, to: 140  },
+            { from: 139.2, to: 139  },
+            { from: 139.2, to: 141  },
+            { from: 142.1, to: 143  },
+            { from: 142.1, to: 144  },
+            { from: 142.1, to: 145  },
+            { from: 142.1, to: 146  },
+            { from: 142.1, to: 147  },
+            { from: 142.1, to: 142  },
+            { from: 148.1, to: 148  },
+            { from: 148.1, to: 149  },
+            { from: 148.1, to: 150  },
+            { from: 150, to: 151, arrows: 'to'  },
+            { from: 148.1, to: 152  },
+            { from: 148.1, to: 153  },
+            { from: 148.1, to: 154  },
+            { from: 154, to: 155, arrows: 'to'  },
+            { from: 157.1, to: 158  },
+            { from: 157.1, to: 159  },
+            { from: 157.1, to: 160  },
+            { from: 157.1, to: 161  },
+            { from: 157.1, to: 162  },
+            { from: 157.1, to: 157  },
+            { from: 163.2, to: 164  },
+            { from: 163.2, to: 163.1  },
+            { from: 163.1, to: 163, arrows: 'to'  },
+            { from: 163.3, to: 165  },
+            { from: 163.3, to: 166  },
+            { from: 163.3, to: 163  },
+            { from: 166, to: 167, arrows: 'to'  },
+            { from: 171, to: 168, arrows: 'to'  },
+            { from: 169, to: 170  },
+            { from: 169, to: 171  },
+            { from: 169, to: 172  },
+            { from: 169, to: 173  },
+            { from: 169, to: 174  },
+            { from: 169, to: 175  },
+            { from: 171.1, to: 176  },
+            { from: 171.1, to: 177  },
+            { from: 171.1, to: 171  },
+            { from: 172, to: 178, arrows: 'to'  },
+            { from: 173, to: 179, arrows: 'to'  },
+            { from: 174, to: 180, arrows: 'to'  },
+            { from: 176, to: 181, arrows: 'to'  },
+            { from: 177, to: 182, arrows: 'to'  },
+            { from: 355.1, to: 181  },
+            { from: 355.1, to: 355  },
+            { from: 355.1, to: 492  },
+            { from: 183.1, to: 184  },
+            { from: 183.1, to: 185  },
+            { from: 183.1, to: 183  },
+            { from: 185, to: 186, arrows: 'to'  },
+            { from: 191, to: 190, arrows: 'to'  },
+            { from: 190.1, to: 192  },
+            { from: 190.1, to: 193  },
+            { from: 190.1, to: 191  },
+            { from: 192, to: 194, arrows: 'to'  },
+            { from: 193, to: 195, arrows: 'to'  },
+            { from: 197.1, to: 197  },
+            { from: 197.1, to: 198  },
+            { from: 198.1, to: 197  },
+            { from: 198.1, to: 199  },
+            { from: 201, to: 200, arrows: 'to'   },
+            { from: 200.1, to: 202  },
+            { from: 200.1, to: 203  },
+            { from: 200.1, to: 204  },
+            { from: 200.1, to: 201  },
+            { from: 206, to: 143, arrows: 'to'  },
+            { from: 206.1, to: 208  },
+            { from: 206.1, to: 206  },
+            { from: 208, to: 207, arrows: 'to'  },
+            { from: 210, to: 209, arrows: 'to'  },
+            { from: 210.1, to: 211  },
+            { from: 210.1, to: 210  },
+            { from: 212.1, to: 213  },
+            { from: 212.1, to: 212  },
+            { from: 212.1, to: 214  },
+            { from: 212.1, to: 215  },
+            { from: 212.1, to: 216  },
+            { from: 212.1, to: 217  },
+            { from: 222, to: 220, arrows: 'to' },
+            { from: 221.1, to: 221  },
+            { from: 221.1, to: 223  },
+            { from: 221.1, to: 222  },
+            { from: 223, to: 224, arrows: 'to' },
+            { from: 220.1, to: 167  },
+            { from: 220.1, to: 225  },
+            { from: 220.1, to: 226  },
+            { from: 220.1, to: 227  },
+            { from: 220.1, to: 228  },
+            { from: 220.1, to: 229  },
+            { from: 220.1, to: 230  },
+            { from: 220.1, to: 231  },
+            { from: 220.1, to: 232  },
+            { from: 220.1, to: 233  },
+            { from: 220.1, to: 234  },
+            { from: 220.1, to: 235  },
+            { from: 233, to: 236, arrows: 'to' },
+            { from: 220.2, to: 237  },
+            { from: 220.1, to: 220  },
+            { from: 220.2, to: 220  },
+            { from: 240, to: 239, arrows: 'to' },
+            { from: 240.2, to: 241  },
+            { from: 240.2, to: 242  },
+            { from: 240.2, to: 243  },
+            { from: 240.1, to: 244  },
+            { from: 240.1, to: 240  },
+            { from: 240.2, to: 239  },
+            { from: 245.1, to: 246  },
+            { from: 245.1, to: 245  },
+            { from: 246, to: 247, arrows: 'to'  },
+            { from: 248, to: 249, arrows: 'to'  },
+            { from: 248.1, to: 250  },
+            { from: 248.1, to: 251  },
+            { from: 248.1, to: 252  },
+            { from: 248.1, to: 253  },
+            { from: 248.1, to: 248  },
+            { from: 253, to: 254, arrows: 'to'  },
+            { from: 262.1, to: 263  },
+            { from: 262.1, to: 262  },
+            { from: 267, to: 266, arrows: 'to'  },
+            { from: 266.1, to: 268  },
+            { from: 266.1, to: 270  },
+            { from: 266.1, to: 267  },
+            { from: 268, to: 269, arrows: 'to'  },
+            { from: 271.1, to: 272  },
+            { from: 271.1, to: 271  },
+            { from: 274, to: 144, arrows: 'to'  },
+            { from: 274.1, to: 274  },
+            { from: 274.1, to: 275  },
+            { from: 274.1, to: 276  },
+            { from: 275, to: 277, arrows: 'to'  },
+            { from: 276, to: 278, arrows: 'to'  },
+            { from: 185.1, to: 281  },
+            { from: 185.1, to: 282  },
+            { from: 185.1, to: 283  },
+            { from: 185.1, to: 185  },
+            { from: 283, to: 284, arrows: 'to'  },
+            { from: 285.1, to: 285  },
+            { from: 285.1, to: 286  },
+            { from: 285.1, to: 185  },
+            { from: 286, to: 287, arrows: 'to'  },
+            { from: 288.1, to: 288  },
+            { from: 288.1, to: 185 },
+            { from: 291.1, to: 289  },
+            { from: 291.1, to: 290  },
+            { from: 291.1, to: 192  },
+            { from: 289, to: 291, arrows: 'to'  },
+            { from: 290, to: 292, arrows: 'to'  },
+            { from: 293, to: 294, arrows: 'to'  },
+            { from: 293.1, to: 293  },
+            { from: 293.2, to: 293  },
+            { from: 293.1, to: 295  },
+            { from: 293.2, to: 296  },
+            { from: 293.2, to: 297  },
+            { from: 293.2, to: 298  },
+            { from: 296, to: 299, arrows: 'to'  },
+            { from: 297, to: 300, arrows: 'to'  },
+            { from: 298, to: 301, arrows: 'to'  },
+            { from: 293.3, to: 302  },
+            { from: 293.3, to: 303  },
+            { from: 293.3, to: 304  },
+            { from: 293.3, to: 294  },
+            { from: 308.1, to: 308  },
+            { from: 308.1, to: 309  },
+            { from: 308.1, to: 193  },
+            { from: 308.2, to: 310  },
+            { from: 308.2, to: 311  },
+            { from: 308.2, to: 312  },
+            { from: 308.2, to: 193  },
+            { from: 312, to: 313, arrows: 'to'  },
+            { from: 317.1, to: 318  },
+            { from: 317.1, to: 317  },
+            { from: 318, to: 319, arrows: 'to'  },
+            { from: 317.2, to: 320  },
+            { from: 317.2, to: 317  },
+            { from: 317.3, to: 321  },
+            { from: 317.3, to: 317  },
+            { from: 317, to: 322, arrows: 'to'  },
+            { from: 327.1, to: 328  },
+            { from: 327.1, to: 327  },
+            { from: 94.2, to: 329 },
+            { from: 94.2, to: 330 },
+            { from: 94.2, to: 331 },
+            { from: 94.2, to: 332 },
+            { from: 94.2, to: 179 },
+            { from: 94.2, to: 333 },
+            { from: 94.2, to: 334 },
+            { from: 94.2, to: 94 },
+            { from: 334, to: 335, arrows: 'to'  },
+            { from: 342.1, to: 343 },
+            { from: 342.1, to: 344 },
+            { from: 342.1, to: 345 },
+            { from: 342.1, to: 346 },
+            { from: 346, to: 347, arrows: 'to' },
+            { from: 342.1, to: 152 },
+            { from: 342.1, to: 342 },
+            { from: 349.1, to: 350 },
+            { from: 349.1, to: 351 },
+            { from: 349.1, to: 352 },
+            { from: 349.1, to: 353 },
+            { from: 349.1, to: 354 },
+            { from: 349.1, to: 355 },
+            { from: 349.1, to: 349 },
+            { from: 355, to: 356, arrows: 'to' },
+            { from: 357.1, to: 358 },
+            { from: 357.1, to: 359 },
+            { from: 357.1, to: 357 },
+            { from: 357.2, to: 360 },
+            { from: 357.2, to: 361 },
+            { from: 357.2, to: 362 },
+            { from: 357.2, to: 357 },
+            { from: 362, to: 363, arrows: 'to' },
+            { from: 365.2, to: 355 },
+            { from: 365.1, to: 366 },
+            { from: 365.1, to: 365 },
+            { from: 365.2, to: 367 },
+            { from: 365.2, to: 368 },
+            { from: 365.2, to: 369 },
+            { from: 365.2, to: 365 },
+            { from: 369, to: 370, arrows: 'to' },
+            { from: 371.1, to: 372 },
+            { from: 371.1, to: 373 },
+            { from: 371.1, to: 371 },
+            { from: 373, to: 374, arrows: 'to' },
+            { from: 371.2, to: 375 },
+            { from: 371.2, to: 376 },
+            { from: 371.2, to: 371 },
+            { from: 371, to: 379, arrows: 'to' },
+            { from: 375, to: 377, arrows: 'to' },
+            { from: 376, to: 378, arrows: 'to' },
+            { from: 381.1, to: 382 },
+            { from: 381.1, to: 383 },
+            { from: 381.1, to: 381 },
+            { from: 381, to: 386, arrows: 'to' },
+            { from: 382, to: 384, arrows: 'to' },
+            { from: 383, to: 385, arrows: 'to' },
+            { from: 388.1, to: 389 },
+            { from: 388.1, to: 388 },
+            { from: 388.2, to: 390 },
+            { from: 388.2, to: 392 },
+            { from: 388, to: 392, arrows: 'to' },
+            { from: 390, to: 391, arrows: 'to' },
+            { from: 394.1, to: 395 },
+            { from: 394.1, to: 396 },
+            { from: 394.1, to: 397 },
+            { from: 394.1, to: 398 },
+            { from: 394.1, to: 399 },
+            { from: 394.1, to: 394 },
+            { from: 399, to: 400, arrows: 'to' },
+            { from: 394.2, to: 401 },
+            { from: 394.2, to: 402 },
+            { from: 394.2, to: 394 },
+            { from: 401, to: 403, arrows: 'to' },
+            { from: 402, to: 404, arrows: 'to' },
+            { from: 394, to: 405, arrows: 'to' },
+            { from: 408, to: 409 },
+            { from: 408, to: 410 },
+            { from: 408, to: 411 },
+            { from: 412.1, to: 413 },
+            { from: 412.1, to: 412 },
+            { from: 412.2, to: 414 },
+            { from: 412.2, to: 412 },
+            { from: 412.2, to: 415 },
+            { from: 412.2, to: 416 },
+            { from: 412.2, to: 418 },
+            { from: 412.3, to: 417 },
+            { from: 412.3, to: 412 },
+            { from: 412.3, to: 419 },
+            { from: 418, to: 420, arrows: 'to' },
+            { from: 419, to: 421, arrows: 'to' },
+            { from: 401.1, to: 425 },
+            { from: 401.1, to: 401 },
+            { from: 401.1, to: 426 },
+            { from: 425, to: 427, arrows: 'to' },
+            { from: 426, to: 428, arrows: 'to' },
+            { from: 431, to: 430, arrows: 'to' },
+            { from: 430.1, to: 432 },
+            { from: 430.1, to: 431 },
+            { from: 442, to: 441, arrows: 'to' },
+            { from: 441.1, to: 443 },
+            { from: 441.1, to: 442 },
+            { from: 443, to: 444, arrows: 'to' },
+            { from: 442.1, to: 445 },
+            { from: 442.1, to: 442 },
+            { from: 442.1, to: 446 },
+            { from: 442.1, to: 447 },
+            { from: 445, to: 448, arrows: 'to' },
+            { from: 446, to: 449, arrows: 'to' },
+            { from: 447, to: 450, arrows: 'to' },
+            { from: 382.2, to: 451 },
+            { from: 382.2, to: 382 },
+            { from: 382.1, to: 452 },
+            { from: 382.1, to: 382 },
+            { from: 455, to: 456, arrows: 'to' },
+            { from: 455.1, to: 457 },
+            { from: 455.1, to: 458 },
+            { from: 455.1, to: 455 },
+            { from: 455.2, to: 460 },
+            { from: 455.2, to: 460.1 },
+            { from: 455.2, to: 455 },
+            { from: 458, to: 459, arrows: 'to' },
+            { from: 460, to: 461, arrows: 'to' },
+            { from: 460.1, to: 461.1, arrows: 'to' },
+            { from: 463, to: 84 },
+            { from: 463, to: 464 },
+            { from: 463, to: 465 },
+            { from: 463, to: 466 },
+            { from: 469.1, to: 470 },
+            { from: 469.1, to: 471 },
+            { from: 469.1, to: 335 },
+            { from: 469.1, to: 469 },
+            { from: 471, to: 472, arrows: 'to' },
+            { from: 469.2, to: 473 },
+            { from: 469.2, to: 474 },
+            { from: 469.2, to: 475 },
+            { from: 469.2, to: 476 },
+            { from: 469.2, to: 469  },
+            { from: 477.1, to: 478 },
+            { from: 477.1, to: 477 },
+            { from: 477.2, to: 479 },
+            { from: 477.2, to: 480 },
+            { from: 477.2, to: 477 },
+            { from: 480, to: 481, arrows: 'to' },
+            { from: 484, to: 483, arrows: 'to' },
+            { from: 484.1, to: 485 },
+            { from: 484.1, to: 484 },
+            { from: 484.2, to: 486 },
+            { from: 484.2, to: 487 },
+            { from: 484.2, to: 488 },
+            { from: 484.2, to: 483 },
+            { from: 488, to: 489, arrows: 'to' },
+            { from: 349.1, to: 491 },
+            { from: 493.8, to: 494, arrows: 'to' },
+            { from: 493.7, to: 495 },
+            { from: 493.7, to: 496 },
+            { from: 493.7, to: 497 },
+            { from: 493.7, to: 498 },
+            { from: 493.7, to: 493.8 },
+            { from: 498, to: 499, arrows: 'to' },
+            { from: 493.6, to: 502},
+            { from: 493.6, to: 500 },
+            { from: 493.6, to: 501 },
+            { from: 493.6, to: 494 },
+            { from: 502, to: 503, arrows: 'to' },
+            { from: 509.1, to: 510 },
+            { from: 509.1, to: 511 },
+            { from: 509.1, to: 512 },
+            { from: 509.1, to: 509 },
+            { from: 509.1, to: 512.1 },
+            { from: 512, to: 513, arrows: 'to' },
+            { from: 515.1, to: 516 },
+            { from: 515.1, to: 515 },
+            { from: 519.1, to: 520 },
+            { from: 519.1, to: 519 },
+            { from: 520, to: 521, arrows: 'to' },
+            { from: 524, to: 525 },
+            { from: 525, to: 526, arrows: 'to' },
+            { from: 524, to: 523, arrows: 'to' },
+            { from: 530.1, to: 528 },
+            { from: 530.1, to: 529 },
+            { from: 530.1, to: 530 },
+            { from: 529, to: 532, arrows: 'to' },
+            { from: 530, to: 531, arrows: 'to' },
+            { from: 533.1, to: 534 },
+            { from: 533.1, to: 535 },
+            { from: 533.1, to: 533 },
+            { from: 533, to: 536, arrows: 'to' },
+            { from: 534, to: 537, arrows: 'to' },
+            { from: 535, to: 538, arrows: 'to' },
+            { from: 540.1, to: 541 },
+            { from: 540.1, to: 542 },
+            { from: 540.1, to: 540 },
+            { from: 540, to: 543, arrows: 'to' },
+            { from: 541, to: 544, arrows: 'to' },
+            { from: 542, to: 545, arrows: 'to' },
+            { from: 549.1, to: 184 },
+            { from: 549.1, to: 550 },
+            { from: 549.1, to: 551 },
+            { from: 549.1, to: 549 },
+            { from: 551, to: 552, arrows: 'to' },
+            { from: 553.1, to: 554 },
+            { from: 553.1, to: 555 },
+            { from: 553.1, to: 556 },
+            { from: 553.1, to: 553 },
+            { from: 556, to: 557, arrows: 'to' },
+            { from: 553.2, to: 558 },
+            { from: 553.2, to: 559 },
+            { from: 553.2, to: 560 },
+            { from: 553.2, to: 553 },
+            { from: 553.3, to: 561 },
+            { from: 553.3, to: 562 },
+            { from: 553.3, to: 553 },
+            { from: 553, to: 565, arrows: 'to' },
+            { from: 561, to: 563, arrows: 'to' },
+            { from: 562, to: 564, arrows: 'to' },
+            { from: 572.1, to: 573 },
+            { from: 572.1, to: 572 },
+            { from: 573, to: 574, arrows: 'to' },
+            { from: 578.1, to: 579 },
+            { from: 578.1, to: 580 },
+            { from: 578.1, to: 581 },
+            { from: 578.1, to: 582 },
+            { from: 578.1, to: 583 },
+            { from: 578.1, to: 584 },
+            { from: 578.1, to: 578 },
+            { from: 584, to: 585, arrows: 'to' },
+            { from: 578.2, to: 529 },
+            { from: 578.2, to: 586 },
+            { from: 578.2, to: 578 },
+            { from: 578, to: 588, arrows: 'to' },
+            { from: 586, to: 587, arrows: 'to' },
+            { from: 586.1, to: 589 },
+            { from: 586.1, to: 586 },
+            { from: 592.1, to: 593 },
+            { from: 592.1, to: 592 },
+            { from: 592.2, to: 594 },
+            { from: 592.2, to: 595 },
+            { from: 592.2, to: 592 },
+            { from: 592, to: 596, arrows: 'to' },
+            { from: 594, to: 597, arrows: 'to' },
+            { from: 595, to: 598, arrows: 'to' },
+            { from: 599.1, to: 600 },
+            { from: 599.1, to: 601 },
+            { from: 599.1, to: 599 },
+            { from: 599.2, to: 369 },
+            { from: 599.2, to: 602 },
+            { from: 599.2, to: 599 },
+            { from: 599, to: 603, arrows: 'to' },
+            { from: 602, to: 604, arrows: 'to' },
+            { from: 609.1, to: 608 },
+            { from: 609.1, to: 609 },
+            { from: 609, to: 610, arrows: 'to' },
+            { from: 612.1, to: 613 },
+            { from: 612.1, to: 614 },
+            { from: 612.1, to: 615 },
+            { from: 612.1, to: 612 },
+            { from: 612, to: 618, arrows: 'to' },
+            { from: 615, to: 457, arrows: 'to' },
+            { from: 613, to: 616, arrows: 'to' },
+            { from: 614, to: 617, arrows: 'to' },
+            { from: 478.1, to: 478 },
+            { from: 478.1, to: 620 },
+            { from: 619, to: 620, arrows: 'to' },
+            { from: 478.2, to: 621 },
+            { from: 478.2, to: 622 },
+            { from: 478.2, to: 623 },
+            { from: 478.2, to: 624 },
+            { from: 478.2, to: 625 },
+            { from: 478.2, to: 626 },
+            { from: 478.2, to: 627 },
+            { from: 478.2, to: 628 },
+            { from: 478.2, to: 629 },
+            { from: 478.2, to: 630 },
+            { from: 478.2, to: 397 },
+            { from: 478.2, to: 478 },
+            { from: 631.1, to: 632 },
+            { from: 631.1, to: 633 },
+            { from: 631.1, to: 634 },
+            { from: 631.1, to: 631 },
+            { from: 634, to: 635, arrows: 'to' },
+            { from: 631, to: 636, arrows: 'to' },
+            { from: 631.2, to: 637 },
+            { from: 631.2, to: 636 },
+            { from: 631.3, to: 638 },
+            { from: 631.3, to: 636 },
+            { from: 631.4, to: 639 },
+            { from: 631.4, to: 640 },
+            { from: 631.4, to: 636 },
+            { from: 642.1, to: 642 },
+            { from: 642.1, to: 641 },
+            { from: 643, to: 644 },
+            { from: 643, to: 231, arrows: 'to' },
+            { from: 91, to: 647.1 },
+            { from: 648, to: 647.1 },
+            { from: 647, to: 647.1 },
+            { from: 649.1, to: 650 },
+            { from: 649.1, to: 651 },
+            { from: 649.1, to: 652 },
+            { from: 649.1, to: 653 },
+            { from: 649.1, to: 649 },
+            { from: 651, to: 654, arrows: 'to' },
+            { from: 652, to: 655, arrows: 'to' },
+            { from: 653, to: 656, arrows: 'to' },
+            { from: 649.2, to: 658 },
+            { from: 649.2, to: 659 },
+            { from: 649.2, to: 649},
+            { from: 659, to: 660, arrows: 'to' },
+            { from: 661.1, to: 662 },
+            { from: 661.1, to: 663 },
+            { from: 661.1, to: 661 },
+            { from: 661.2, to: 664 },
+            { from: 661.2, to: 665 },
+            { from: 661.2, to: 661 },
+            { from: 667, to: 668.1 },
+            { from: 668, to: 668.1 },
+            { from: 668, to: 669, arrows: 'to' },
+            { from: 670.1, to: 671 },
+            { from: 670.1, to: 672 },
+            { from: 670.1, to: 670 },
+            { from: 672, to: 673, arrows: 'to' },
+            { from: 670.2, to: 674 },
+            { from: 670.2, to: 675 },
+            { from: 670.2, to: 676 },
+            { from: 670.2, to: 670 },
+            { from: 675, to: 677, arrows: 'to' },
+            { from: 676, to: 678, arrows: 'to' },
+            { from: 670, to: 679, arrows: 'to' },
+            { from: 625.1, to: 680 },
+            { from: 625.1, to: 681 },
+            { from: 625.1, to: 682 },
+            { from: 625.1, to: 625 },
+            { from: 681, to: 683, arrows: 'to' },
+            { from: 682, to: 684, arrows: 'to' },
+            { from: 686.1, to: 687 },
+            { from: 686.1, to: 686 },
+            { from: 688, to: 689 },
+            { from: 688, to: 690 },
+            { from: 688, to: 691 },
+            { from: 692.1, to: 693 },
+            { from: 692.1, to: 694 },
+            { from: 692.1, to: 695 },
+            { from: 692.1, to: 692 },
+            { from: 695, to: 696, arrows: 'to' },
+            { from: 692.2, to: 697 },
+            { from: 692.2, to: 698 },
+            { from: 692.2, to: 692 },
+            { from: 699.1, to: 700 },
+            { from: 699.1, to: 701 },
+            { from: 699.1, to: 702 },
+            { from: 699.1, to: 699 },
+            { from: 702, to: 703, arrows: 'to' },
+            { from: 699, to: 706, arrows: 'to' },
+            { from: 699.2, to: 704 },
+            { from: 699.2, to: 705 },
+            { from: 699.2, to: 706 },
+            { from: 699.2, to: 707.1 },
+            { from: 707, to: 708.1 },
+            { from: 708, to: 708.1 },
+            { from: 709.1, to: 710 },
+            { from: 709.1, to: 709 },
+            { from: 709.2, to: 711 },
+            { from: 709.2, to: 712 },
+            { from: 709.2, to: 713 },
+            { from: 709.2, to: 714 },
+            { from: 709.2, to: 709 },
+            { from: 714, to: 715, arrows: 'to' },
+            { from: 709.3, to: 716 },
+            { from: 709.3, to: 717 },
+            { from: 709.3, to: 709 },
+            { from: 716, to: 718, arrows: 'to' },
+            { from: 717, to: 719, arrows: 'to' },
+            { from: 709, to: 720, arrows: 'to' },
+            { from: 709.4, to: 721 },
+            { from: 709.4, to: 720 },
+            { from: 721, to: 722, arrows: 'to' },
+            { from: 709.5, to: 723 },
+            { from: 709.5, to: 724 },
+            { from: 709.5, to: 725 },
+            { from: 709.5, to: 72 },
+            { from: 723, to: 726, arrows: 'to' },
+            { from: 724, to: 727, arrows: 'to' },
+            { from: 725, to: 728, arrows: 'to' },
+            { from: 709.6, to: 729 },
+            { from: 709.6, to: 730 },
+            { from: 709.6, to: 720 },
+            { from: 731.1, to: 732 },
+            { from: 731.1, to: 733 },
+            { from: 731.1, to: 734 },
+            { from: 731.1, to: 735 },
+            { from: 731.1, to: 736 },
+            { from: 731.1, to: 731 },
+            { from: 731.2, to: 737 },
+            { from: 731.2, to: 738 },
+            { from: 731.2, to: 731 },
+            { from: 737, to: 739, arrows: 'to' },
+            { from: 738, to: 740, arrows: 'to' },
+            { from: 731, to: 741, arrows: 'to' },
+            { from: 731.3, to: 742 },
+            { from: 731.3, to: 741 },
+            { from: 742, to: 743, arrows: 'to' },
+            { from: 745.1, to: 746 },
+            { from: 746, to: 747, arrows: 'to' },
+            { from: 745.2, to: 748 },
+            { from: 745.2, to: 749 },
+            { from: 745.2, to: 745 },
+            { from: 745.3, to: 750 },
+            { from: 745.3, to: 751 },
+            { from: 745.3, to: 752 },
+            { from: 745.3, to: 745 },
+            { from: 745, to: 753, arrows: 'to' },
+            { from: 750, to: 754, arrows: 'to' },
+            { from: 751, to: 755, arrows: 'to' },
+            { from: 752, to: 756, arrows: 'to' },
+            { from: 745.1, to: 757 },
+            { from: 745.1, to: 745 },
+            { from: 765, to: 764 },
+            { from: 765, to: 763 },
+            { from: 766, to: 767 },
+            { from: 766, to: 469 },
+            { from: 768.1, to: 768 },
+            { from: 768.1, to: 769 },
+            { from: 768.1, to: 770 },
+            { from: 768.1, to: 771 },
+            { from: 770, to: 772, arrows: 'to' },
+            { from: 771, to: 773, arrows: 'to' },
+            { from: 768.2, to: 768 },
+            { from: 768.2, to: 774 },
+            { from: 774, to: 775, arrows: 'to' },
+            { from: 776.1, to: 776 },
+            { from: 776.1, to: 777 },
+            { from: 776.1, to: 778 },
+            { from: 777, to: 779, arrows: 'to' },
+            { from: 778, to: 780, arrows: 'to' },
+            { from: 776.2, to: 781 },
+            { from: 776.2, to: 776 },
+            { from: 776.2, to: 782 },
+            { from: 781, to: 783, arrows: 'to' },
+            { from: 782, to: 784, arrows: 'to' },
+            { from: 776, to: 785, arrows: 'to' },
+            { from: 776.3, to: 785 },
+            { from: 776.3, to: 772 },
+            { from: 786.1, to: 786 },
+            { from: 786.1, to: 787 },
+            { from: 786.1, to: 239 },
+            { from: 789.1, to: 789 },
+            { from: 789.1, to: 790 },
+            { from: 789.1, to: 791 },
+            { from: 791, to: 792, arrows: 'to' },
+            { from: 794.1, to: 794 },
+            { from: 794.1, to: 795 },
+            { from: 794.1, to: 312 },
+            { from: 795, to: 796, arrows: 'to' },
+            { from: 797.1, to: 797 },
+            { from: 797.1, to: 798 },
+            { from: 799.1, to: 799 },
+            { from: 799.1, to: 800 },
+            { from: 801.1, to: 801 },
+            { from: 801.1, to: 802 },
+            { from: 801.2, to: 801 },
+            { from: 801.2, to: 803 },
+            { from: 801.2, to: 804 },
+            { from: 801, to: 807, arrows: 'to' },
+            { from: 803, to: 805, arrows: 'to' },
+            { from: 804, to: 806, arrows: 'to' },
+            { from: 808.1, to: 808 },
+            { from: 808.1, to: 809  },
+            { from: 808.1, to: 810},
+            { from: 808.1, to: 811 },
+            { from: 812.1, to: 813 },
+            { from: 812.1, to: 795 },
+            { from: 813, to: 812, arrows: 'to' },
+            { from: 812.2, to: 65 },
+            { from: 812.2, to: 813 },
+            { from: 816.1, to: 816 },
+            { from: 816.1, to: 817 },
+            { from: 816.2, to: 816 },
+            { from: 816.2, to: 818 },
+            { from: 816, to: 819, arrows: 'to' },
+            { from: 166.1, to: 166 },
+            { from: 166.1, to: 820 },
+            { from: 166.1, to: 821 },
+            { from: 166.1, to: 822 },
+            { from: 822, to: 823, arrows: 'to' },
+            { from: 825.1, to: 825 },
+            { from: 825.1, to: 826 },
+            { from: 825.1, to: 827 },
+            { from: 825.2, to: 825 },
+            { from: 825.2, to: 729 },
+            { from: 825, to: 828, arrows: 'to' },
+            { from: 826, to: 829, arrows: 'to' },
+            { from: 831.1, to: 831 },
+            { from: 831.1, to: 832 },
+            { from: 833.1, to: 833 },
+            { from: 833.1, to: 834 },
+            { from: 833.1, to: 835 },
+            { from: 833, to: 836, arrows: 'to' },
+            { from: 834, to: 837, arrows: 'to' },
+            { from: 835, to: 838, arrows: 'to' },
+            { from: 839.1, to: 839 },
+            { from: 839.1, to: 840 },
+            { from: 839.1, to: 841 },
+            { from: 839, to: 842, arrows: 'to' },
+            { from: 840, to: 843, arrows: 'to' },
+            { from: 841, to: 844, arrows: 'to' },
+            { from: 845.1, to: 845 },
+            { from: 845.1, to: 846 },
+            { from: 845.1, to: 847 },
+            { from: 845, to: 848, arrows: 'to' },
+            { from: 846, to: 849, arrows: 'to' },
+            { from: 847, to: 850, arrows: 'to' },
+            { from: 852.1, to: 852 },
+            { from: 852.1, to: 853 },
+            { from: 852.1, to: 854 },
+            { from: 852.1, to: 857 },
+            { from: 852.1, to: 859 },
+            { from: 852, to: 855, arrows: 'to' },
+            { from: 854, to: 856, arrows: 'to' },
+            { from: 857, to: 858, arrows: 'to' },
+            { from: 852.2, to: 860 },
+            { from: 852.2, to: 852 },
+            { from: 852.2, to: 418 },
+            { from: 860, to: 861, arrows: 'to' },
+            { from: 863.1, to: 863 },
+            { from: 863.1, to: 864 },
+            { from: 863.1, to: 865 },
+            { from: 863.1, to: 866 },
+            { from: 863.1, to: 867 },
+            { from: 863.1, to: 868 },
+            { from: 863.1, to: 869 },
+            { from: 863, to: 870, arrows: 'to' },
+            { from: 868, to: 871, arrows: 'to' },
+            { from: 869, to: 872, arrows: 'to' },
+            { from: 863.2, to: 863 },
+            { from: 863.2, to: 873 },
+            { from: 873, to: 874, arrows: 'to' },
+            { from: 876.1, to: 752 },
+            { from: 876.1, to: 877 },
+            { from: 876.1, to: 878 },
+            { from: 876.1, to: 879 },
+            { from: 878, to: 880, arrows: 'to' },
+            { from: 879, to: 881, arrows: 'to' },
+            { from: 883.1, to: 884 },
+            { from: 883.1, to: 885 },
+            { from: 883.1, to: 886 },
+            { from: 883.1, to: 883 },
+            { from: 883, to: 888, arrows: 'to' },
+            { from: 886, to: 887, arrows: 'to' },
+            { from: 889.1, to: 889 },
+            { from: 889.1, to: 890 },
+            { from: 889, to: 891, arrows: 'to' },
+            { from: 890, to: 892, arrows: 'to' },
+            { from: 895.1, to: 895 },
+            { from: 895.1, to: 896 },
+            { from: 895.1, to: 897 },
+            { from: 895, to: 285, arrows: 'to' },
+            { from: 896, to: 898, arrows: 'to' },
+            { from: 897, to: 899, arrows: 'to' },
+            { from: 901.1, to: 901 },
+            { from: 901.1, to: 902 },
+            { from: 901.1, to: 903 },
+            { from: 901.1, to: 904 },
+            { from: 901.1, to: 905 },
+            { from: 901.1, to: 650 },
+            { from: 901, to: 906, arrows: 'to' },
+            { from: 904, to: 907, arrows: 'to' },
+            { from: 905, to: 908, arrows: 'to' },
+            { from: 901.2, to: 141 },
+            { from: 901.2, to: 906 },
+            { from: 901.2, to: 909 },
+            { from: 909, to: 910, arrows: 'to' },
+            { from: 901.2, to: 911 },
+            { from: 901.2, to: 912 },
+            { from: 911, to: 913, arrows: 'to' },
+            { from: 912, to: 914, arrows: 'to' },
+            { from: 901.3, to: 906},
+            { from: 901.3, to: 275 },
+            { from: 901.3, to: 276 },
+            { from: 901.3, to: 915 },
+            { from: 901.3, to: 916 },
+            { from: 901.3, to: 917 },
+            { from: 901.3, to: 918 },
+            { from: 918, to: 919, arrows: 'to' },
+            { from: 901.4, to: 906},
+            { from: 901.4, to: 920},
+            { from: 901.4, to: 921},
+            { from: 921, to: 922, arrows: 'to' },
+            { from: 6.1, to: 923 },
+            { from: 6.1, to: 924 },
+            { from: 6.1, to: 925 },
+            { from: 6.1, to: 926 },
+            { from: 6.1, to: 927 },
+            { from: 6.1, to: 928 },
+            { from: 923, to: 6, arrows: 'to' },
+            { from: 927, to: 929, arrows: 'to' },
+            { from: 928, to: 930, arrows: 'to' },
+            { from: 937.1, to: 937 },
+            { from: 937.1, to: 938 },
+            { from: 939.1, to: 939 },
+            { from: 939.1, to: 940 },
+            { from: 939.1, to: 941 },
+            { from: 939.1, to: 942 },
+            { from: 940, to: 943, arrows: 'to' },
+            { from: 941, to: 944, arrows: 'to' },
+            { from: 939.2, to: 945 },
+            { from: 939.2, to: 946 },
+            { from: 939, to: 947, arrows: 'to' },
+            { from: 939.3, to: 947 },
+            { from: 939.3, to: 948 },
+            { from: 939.3, to: 949 },
+            { from: 939.3, to: 950 },
+            { from: 950, to: 951, arrows: 'to' },
+            { from: 954.1, to: 954 },
+            { from: 954.1, to: 955 },
+            { from: 954.1, to: 956 },
+            { from: 954.1, to: 671 },
+            { from: 956, to: 957, arrows: 'to' },
+            { from: 954.2, to: 958 },
+            { from: 954.2, to: 959 },
+            { from: 958, to: 960, arrows: 'to' },
+            { from: 959, to: 961, arrows: 'to' },
+            { from: 954, to: 962, arrows: 'to' },
+            { from: 954.3, to: 962 },
+            { from: 954.3, to: 963 },
+            { from: 954.3, to: 964 },
+            { from: 964, to: 965, arrows: 'to' },
+            { from: 795.1, to: 725 },
+            { from: 795.1, to: 721 },
+            { from: 795.1, to: 794 },
+            { from: 970.1, to: 970 },
+            { from: 970.1, to: 971 },
+            { from: 970.1, to: 972 },
+            { from: 970.1, to: 283 },
+            { from: 972, to: 973, arrows: 'to' },
+            { from: 974.1, to: 974 },
+            { from: 974.1, to: 975 },
+            { from: 975, to: 976, arrows: 'to' },
+            { from: 982.1, to: 982 },
+            { from: 982.1, to: 983 },
+            { from: 982.1, to: 984 },
+            { from: 982.1, to: 985 },
+            { from: 982.1, to: 986 },
+            { from: 982, to: 987, arrows: 'to' },
+            { from: 985, to: 988, arrows: 'to' },
+            { from: 993.1, to: 993 },
+            { from: 993.1, to: 994 },
+            { from: 997.1, to: 246 },
+            { from: 997.1, to: 998 },
+            { from: 997.1, to: 999 },
+            { from: 998, to: 1000, arrows: 'to' },
+            { from: 999, to: 1001, arrows: 'to' },
+            { from: 1009.1, to: 221 },
+            { from: 1009.1, to: 1009 },
+            { from: 1009.1, to: 998  },
+            { from: 1009.1, to: 1010},
+            { from: 1009, to: 1011, arrows: 'to' },
+            { from: 820.1, to: 820},
+            { from: 820.1, to: 1013},
+            { from: 820.1, to: 1014},
+            { from: 820.1, to: 1015},
+            { from: 820.1, to: 1016},
+            { from: 820.1, to: 1017},
+            { from: 820.1, to: 1018},
+            { from: 1017, to: 1019, arrows: 'to' },
+            { from: 1018, to: 1020, arrows: 'to' },
+            { from: 1026.1, to: 1026},
+            { from: 1026.1, to: 1027},
+            { from: 1026.1, to: 915},
+            { from: 1026, to: 1028, arrows: 'to' },
+            { from: 1027, to: 1029, arrows: 'to' },
+            { from: 1032.1, to: 1032},
+            { from: 1032.1, to: 1033},
+            { from: 1032.1, to: 1034},
+            { from: 1032.1, to: 1035},
+            { from: 1032.1, to: 1036},
+            { from: 1032, to: 1037, arrows: 'to' },
+            { from: 1035, to: 1038, arrows: 'to' },
+            { from: 1036, to: 1039, arrows: 'to' },
+            { from: 1032.2, to: 1037},
+            { from: 1032.2, to: 1040},
+            { from: 1032.2, to: 1041},
+            { from: 1032.2, to: 1042},
+            { from: 1040, to: 1043, arrows: 'to' },
+            { from: 1041, to: 1044, arrows: 'to' },
+            { from: 1042, to: 1045, arrows: 'to' },
+            { from: 1047.1, to: 1047},
+            { from: 1047.1, to: 1048},
+            { from: 1047.1, to: 1049},
+            { from: 1047.2, to: 1050},
+            { from: 1047.2, to: 1051},
+            { from: 1047.2, to: 1052},
+            { from: 1047.2, to: 1047},
+            { from: 1050, to: 1053, arrows: 'to' },
+            { from: 1051, to: 1054, arrows: 'to' },
+            { from: 1052, to: 1055, arrows: 'to' },
+            { from: 1047, to: 1056, arrows: 'to' },
+            { from: 1057.1, to: 1057},
+            { from: 1057.1, to: 1058},
+            { from: 1057, to: 1059, arrows: 'to' },
+            { from: 1057.2, to: 1059},
+            { from: 1057.2, to: 1060},
+            { from: 1057.2, to: 1061},
+            { from: 1057.2, to: 1062},
+            { from: 1063.1, to: 1063},
+            { from: 1063.1, to: 1064},
+            { from: 1063.1, to: 1065},
+            { from: 1067.1, to: 1067},
+            { from: 1067.1, to: 1068},
+            { from: 1067.1, to: 1069},
+            { from: 1067.1, to: 1070},
+            { from: 1067.1, to: 1071},
+            { from: 1071, to: 1072, arrows: 'to' },
+            { from: 1076.1, to: 1076},
+            { from: 1076.1, to: 1077},
+            { from: 1076.1, to: 1079},
+            { from: 1076, to: 1078, arrows: 'to' },
+            { from: 1079, to: 1080, arrows: 'to' },
+            { from: 1076.2, to: 1078},
+            { from: 1076.2, to: 1081},
+            { from: 1082.1, to: 1082},
+            { from: 1082.1, to: 1083},
+            { from: 1082.1, to: 1084},
+            { from: 1082.1, to: 1085},
+            { from: 1082.1, to: 1086},
+            { from: 1086, to: 479, arrows: 'to' },
+            { from: 1082.2, to: 1082},
+            { from: 1082.2, to: 1087},
+            { from: 1082.2, to: 1088},
+            { from: 1082, to: 1089, arrows: 'to' },
+            { from: 1082.3, to: 1089},
+            { from: 1082.3, to: 1090},
+            { from: 1082.3, to: 1091},
+            { from: 1082.3, to: 1041},
+            { from: 1094.1, to: 1094},
+            { from: 1094.1, to: 1095},
+            { from: 1094.1, to: 221},
+            { from: 1095, to: 1096, arrows: 'to' },
+            { from: 1094.2, to: 1094},
+            { from: 1094.2, to: 1097},
+            { from: 1094.3, to: 1094},
+            { from: 1094.3, to: 1098},
+            { from: 1094.3, to: 1099},
+            { from: 1098, to: 1100, arrows: 'to' },
+            { from: 1099, to: 1101, arrows: 'to' },
+            { from: 1094.4, to: 1094},
+            { from: 1094.4, to: 1102},
+            { from: 1094.4, to: 1103},
+            { from: 1102, to: 1104, arrows: 'to' },
+            { from: 1103, to: 1105, arrows: 'to' },
+            { from: 1094, to: 1106, arrows: 'to' },
+            { from: 1094.5, to: 1106},
+            { from: 1094.5, to: 1107},
+            { from: 1108.1, to: 1108},
+            { from: 1108.1, to: 1109},
+            { from: 1108.1, to: 1110},
+            { from: 1113.1, to: 1113},
+            { from: 1113.1, to: 1114},
+            { from: 1113.2, to: 1115},
+            { from: 1113.2, to: 1116},
+            { from: 1113.3, to: 1113},
+            { from: 1113.3, to: 930},
+            { from: 1113, to: 1117, arrows: 'to' },
+            { from: 1118.1, to: 1118},
+            { from: 1118.1, to: 1119},
+            { from: 1118, to: 1120, arrows: 'to' },
+            { from: 1123, to: 1126, arrows: 'to' },
+            { from: 1124, to: 1125, arrows: 'to' },
+            { from: 1123.1, to: 1123},
+            { from: 1123.1, to: 1124},
+            { from: 1123.1, to: 250},
+            { from: 1127.1, to: 1127},
+            { from: 1127.1, to: 1128},
+            { from: 1127.1, to: 1129},
+            { from: 1127.1, to: 495},
+            { from: 1129, to: 1130, arrows: 'to' },
+            { from: 1127.2, to: 1127},
+            { from: 1127.2, to: 1131},
+            { from: 1127.2, to: 1132},
+            { from: 1127.3, to: 1127},
+            { from: 1127.3, to: 1133},
+            { from: 1127.3, to: 1134},
+            { from: 1127, to: 1136, arrows: 'to' },
+            { from: 1127.4, to: 1135},
+            { from: 1127.4, to: 1136},
+            { from: 1146.1, to: 1146},
+            { from: 1146.1, to: 1147},
+            { from: 1146, to: 1148, arrows: 'to' },
+            { from: 1155.1, to: 1155},
+            { from: 1155.1, to: 1156},
+            { from: 1155.1, to: 1157},
+            { from: 1155.1, to: 1158},
+            { from: 1155.1, to: 1159},
+            { from: 1155.1, to: 1160},
+            { from: 1158, to: 1161, arrows: 'to' },
+            { from: 1159, to: 1162, arrows: 'to' },
+            { from: 1160, to: 1163, arrows: 'to' },
+            { from: 1164.1, to: 1164},
+            { from: 1164.1, to: 1165},
+            { from: 1165, to: 1166, arrows: 'to' },
+            { from: 1164.2, to: 1164},
+            { from: 1164.3, to: 1168},
+            { from: 1164.3, to: 1169},
+            { from: 1164.3, to: 1170},
+            { from: 1164.3, to: 1171},
+            { from: 1164.3, to: 1172},
+            { from: 1172, to: 1173, arrows: 'to' },
+            { from: 1164, to: 1168, arrows: 'to' },
+            { from: 758.1, to: 758},
+            { from: 758.1, to: 759},
+            { from: 758.1, to: 760},
+            { from: 758.1, to: 761},
+            { from: 758.1, to: 762},
+            { from: 554.1, to: 1174},
+            { from: 554.1, to: 1175},
+            { from: 554.1, to: 1176},
+            { from: 554.1, to: 1177},
+            { from: 554.1, to: 554},
+            { from: 1176, to: 1178, arrows: 'to' },
+            { from: 1177, to: 1179, arrows: 'to' },
+            { from: 1180.1, to: 1180},
+            { from: 1180.1, to: 1181},
+            { from: 1180.1, to: 1182},
+            { from: 1180.1, to: 1183},
+            { from: 1180.1, to: 1184},
+            { from: 1180, to: 1187, arrows: 'to' },
+            { from: 1183, to: 1185, arrows: 'to' },
+            { from: 1184, to: 1186, arrows: 'to' },
+            { from: 1180.2, to: 1187},
+            { from: 1180.2, to: 1188},
+            { from: 1189.1, to: 1189},
+            { from: 1189.1, to: 1190},
+            { from: 1189.1, to: 1191},
+            { from: 1191, to: 1192, arrows: 'to' },
+            { from: 1016.1, to: 1193},
+            { from: 1016.1, to: 1194},
+            { from: 1016.1, to: 1016},
+            { from: 1194, to: 1195, arrows: 'to' },
+            { from: 1196.1, to: 1196},
+            { from: 1196.1, to: 1197},
+            { from: 1197, to: 1198, arrows: 'to' },
+            { from: 1200.1, to: 1200},
+            { from: 1200.1, to: 1201},
+            { from: 1200.2, to: 1200},
+            { from: 1200.2, to: 1202},
+            { from: 1200.2, to: 409},
+            { from: 1200.2, to: 1197},
+            { from: 1200, to: 1203, arrows: 'to' },
+            { from: 216.1, to: 1207},
+            { from: 216.1, to: 1208},
+            { from: 216.1, to: 1209},
+            { from: 216.1, to: 216},
+            { from: 216.1, to: 158},
+            { from: 1210.1, to: 1210},
+            { from: 1210.1, to: 1211},
+            { from: 1212.1, to: 1212},
+            { from: 1212.1, to: 1213},
+            { from: 1212.1, to: 1214},
+            { from: 1213, to: 1215, arrows: 'to' },
+            { from: 1212.2, to: 1212},
+            { from: 1212.2, to: 1216},
+            { from: 1212.2, to: 1217},
+            { from: 1217, to: 1218, arrows: 'to' },
+            { from: 1212.3, to: 1219},
+            { from: 1212.3, to: 1220},
+            { from: 1212.3, to: 1221},
+            { from: 1212.3, to: 1222},
+            { from: 1212.3, to: 1223},
+            { from: 1212.3, to: 65},
+            { from: 1222, to: 1224, arrows: 'to' },
+            { from: 1223, to: 1225, arrows: 'to' },
+            { from: 1212, to: 1219, arrows: 'to' },
+            { from: 1228.1, to: 1228},
+            { from: 1228.1, to: 1229},
+            { from: 1228.1, to: 1230},
+            { from: 1228, to: 1231, arrows: 'to' },
+            { from: 1228.2, to: 1231},
+            { from: 1228.2, to: 1232},
+            { from: 1228.2, to: 1233},
+            { from: 1228.3, to: 1231},
+            { from: 1228.3, to: 1235},
+            { from: 1228.3, to: 1236},
+            { from: 1228.3, to: 1237},
+            { from: 1228.3, to: 1238},
+            { from: 1228.3, to: 1239},
+            { from: 1238, to: 1240, arrows: 'to' },
+            { from: 1239, to: 1241, arrows: 'to' },
+            { from: 1242.1, to: 1242},
+            { from: 1242.1, to: 1243},
+            { from: 1242.1, to: 1244},
+            { from: 1242, to: 884, arrows: 'to' },
+            { from: 1243, to: 1245, arrows: 'to' },
+            { from: 1244, to: 1246, arrows: 'to' },
+            { from: 1242.2, to: 1247},
+            { from: 1242.2, to: 884},
+            { from: 1249.1, to: 1249},
+            { from: 1249.1, to: 1250},
+            { from: 1249.1, to: 1251},
+            { from: 1249.2, to: 1249},
+            { from: 1249.2, to: 1252},
+            { from: 1249.2, to: 1253},
+            { from: 1252, to: 1254, arrows: 'to' },
+            { from: 1253, to: 1255, arrows: 'to' },
+            { from: 1249, to: 1256, arrows: 'to' },
+            { from: 1257.1, to: 1257},
+            { from: 1257.1, to: 1114},
+            { from: 1257.2, to: 1257},
+            { from: 1257.2, to: 1258},
+            { from: 1257.3, to: 1257},
+            { from: 1257.3, to: 1259},
+            { from: 1257.3, to: 1260},
+            { from: 1259, to: 1262, arrows: 'to' },
+            { from: 1260, to: 1263, arrows: 'to' },
+            { from: 1257, to: 1261, arrows: 'to' },
+            { from: 1263.1, to: 1264},
+            { from: 1263.1, to: 1265},
+            { from: 1263.1, to: 1266},
+            { from: 1263.1, to: 1022},
+            { from: 1267.1, to: 1267},
+            { from: 1267.1, to: 1268},
+            { from: 1267.1, to: 1191},
+            { from: 1267, to: 1269, arrows: 'to' },
+            { from: 1268, to: 1270, arrows: 'to' },
+            { from: 1279.1, to: 1279},
+            { from: 1279.1, to: 1280},
+            { from: 1279.1, to: 1281},
+            { from: 1281, to: 1282, arrows: 'to' },
+            { from: 1284.1, to: 1285},
+            { from: 1284.1, to: 1286},
+            { from: 1284.1, to: 1287},
+            { from: 1284.1, to: 1288},
+            { from: 1284.1, to: 449},
+            { from: 1284.1, to: 786},
+            { from: 1284.1, to: 938},
+            { from: 1287, to: 1289, arrows: 'to' },
+            { from: 1288, to: 1290, arrows: 'to' },
+            { from: 1284.2, to: 1291},
+            { from: 1284.2, to: 1292},
+            { from: 1284.2, to: 1293},
+            { from: 1284.2, to: 938},
+            { from: 1293, to: 1294, arrows: 'to' },
+            { from: 1284.3, to: 1295},
+            { from: 1284.3, to: 1296},
+            { from: 1284.3, to: 938},
+            { from: 1284.3, to: 790},
+            { from: 1297.1, to: 1297},
+            { from: 1297.1, to: 1202},
+            { from: 1297.1, to: 1253},
+            { from: 1297, to: 1298, arrows: 'to' },
+            { from: 1299.1, to: 1299},
+            { from: 1299.1, to: 1300},
+            { from: 1299.1, to: 771},
+            { from: 1299.2, to: 1299},
+            { from: 1299.2, to: 1301},
+            { from: 1299.2, to: 1302},
+            { from: 1299, to: 1305, arrows: 'to' },
+            { from: 1301, to: 1303, arrows: 'to' },
+            { from: 1302, to: 1304, arrows: 'to' },
+            { from: 1306.1, to: 1306},
+            { from: 1306.1, to: 1307},
+            { from: 1307, to: 1308, arrows: 'to' },
+            { from: 1309.1, to: 1309},
+            { from: 1309.1, to: 1310},
+            { from: 1309.1, to: 1311},
+            { from: 1311, to: 1312, arrows: 'to' },
+            { from: 1314.1, to: 1314},
+            { from: 1314.1, to: 1315},
+            { from: 1314.1, to: 1316},
+            { from: 1314.2, to: 1314},
+            { from: 1314.2, to: 1317},
+            { from: 1314.2, to: 36},
+            { from: 1317, to: 1258, arrows: 'to' },
+            { from: 1314, to: 1237, arrows: 'to' },
+            { from: 1325.1, to: 1325},
+            { from: 1325.1, to: 1326},
+            { from: 1326, to: 1327, arrows: 'to' },
+            { from: 1325.2, to: 1325},
+            { from: 1325.2, to: 1328},
+            { from: 1325, to: 1330, arrows: 'to' },
+            { from: 1328, to: 1329, arrows: 'to' },
+            { from: 789.1, to: 1331},
+            { from: 789.1, to: 1332},
+            { from: 1331, to: 1333, arrows: 'to' },
+            { from: 1332, to: 1334, arrows: 'to' },
+            { from: 1335.1, to: 1335},
+            { from: 1335.1, to: 1336},
+            { from: 1335.1, to: 1337},
+            { from: 1335.1, to: 1338},
+            { from: 1335, to: 1339, arrows: 'to' },
+            { from: 1335.2, to: 1339},
+            { from: 1335.2, to: 1340},
+            { from: 1340, to: 1341, arrows: 'to' },
+            { from: 1335.3, to: 1339},
+            { from: 1335.3, to: 1340},
+            { from: 1335.3, to: 1081},
+            { from: 1343.1, to: 1343},
+            { from: 1343.1, to: 1344},
+            { from: 1343.1, to: 1345},
+            { from: 1343.1, to: 1346},
+            { from: 1343.1, to: 1347},
+            { from: 1343, to: 1350, arrows: 'to' },
+            { from: 1346, to: 1348, arrows: 'to' },
+            { from: 1347, to: 1349, arrows: 'to' },
+            { from: 1351.1, to: 1352},
+            { from: 1351.1, to: 1353},
+            { from: 1351.1, to: 1354},
+            { from: 1351.1, to: 451},
+            { from: 1356.1, to: 1356},
+            { from: 1356.1, to: 1357},
+            { from: 1356.1, to: 1358},
+            { from: 1358, to: 1359, arrows: 'to' },
+            { from: 1356.2, to: 1356},
+            { from: 1356.2, to: 1361},
+            { from: 1356.2, to: 489},
+            { from: 1356, to: 1362, arrows: 'to' },
+            { from: 1360, to: 1361, arrows: 'to' },
+            { from: 1365.1, to: 1365},
+            { from: 1365.1, to: 1366},
+            { from: 1365.2, to: 1365},
+            { from: 1365.2, to: 1367},
+            { from: 1365.2, to: 1368},
+            { from: 1365.2, to: 443},
+            { from: 1368, to: 1369, arrows: 'to' },
+            { from: 1365, to: 1370, arrows: 'to' },
+            { from: 1365.3, to: 1370},
+            { from: 1365.3, to: 1371},
+            { from: 1365.3, to: 1372},
+            { from: 1365.3, to: 1373},
+            { from: 1365.3, to: 1374},
+            { from: 1365.3, to: 1375},
+            { from: 1365.3, to: 1376},
+            { from: 1365.3, to: 1377},
+            { from: 1365.3, to: 700},
+            { from: 1377, to: 1378, arrows: 'to' },
+            { from: 1376, to: 628, arrows: 'to' },
+            
+    
+            
+
+
+       
+            
+
+        ]);
+
+        // Create the network
+        var container = document.getElementById('mynetwork');
+        var data = {
+            nodes: nodes,
+            edges: edges
+        };
+        var options = {};
+        var network = new vis.Network(container, data, options);
+
+    // Add search and filter functionality
+    document.getElementById('searchBox').addEventListener('input', function() {
+      filterNetwork();
+    });
+
+    document.getElementById('teamDropdown').addEventListener('change', function() {
+      filterNetwork();
+    });
+
+    function filterNetwork() {
+      var query = document.getElementById('searchBox').value.toLowerCase();
+      var team = document.getElementById('teamDropdown').value;
+
+      var filteredNodes = nodes.get({
+        filter: function (node) {
+          var match = true;
+          if (query) {
+            match = node.label.toLowerCase().includes(query);
+          }
+          if (team) {
+            match = match && node.team === team;
+          }
+          return match;
+        }
+      });
+
+      if (filteredNodes.length > 0) {
+        var connectedNodes = [];
+        var connectedEdges = [];
+
+        // Find all nodes and edges connected to any of the filtered nodes
+        filteredNodes.forEach(filteredNode => {
+          var nodeId = filteredNode.id;
+          var result = getConnectedNodesAndEdges(nodeId);
+          connectedNodes = connectedNodes.concat(result.connectedNodes);
+          connectedEdges = connectedEdges.concat(result.connectedEdges);
+        });
+
+        // Remove duplicates
+        connectedNodes = Array.from(new Set(connectedNodes.map(node => node.id))).map(id => nodes.get(id));
+        connectedEdges = Array.from(new Set(connectedEdges.map(edge => `${edge.from}-${edge.to}`))).map(key => {
+          var [from, to] = key.split('-');
+          return edges.get({ filter: e => e.from == from && e.to == to })[0];
+        });
+
+        // Update the network to show only the connected nodes and edges
+        network.setData({nodes: new vis.DataSet(connectedNodes), edges: new vis.DataSet(connectedEdges)});
+      } else {
+        // If no nodes match, show an empty network
+        network.setData({nodes: new vis.DataSet([]), edges: new vis.DataSet([])});
+      }
+    }
+
+    function getConnectedNodesAndEdges(nodeId) {
+      var visited = {};
+      var queue = [nodeId];
+      var connectedNodes = [];
+      var connectedEdges = [];
+
+      while (queue.length > 0) {
+        var currentNode = queue.shift();
+        if (!visited[currentNode]) {
+          visited[currentNode] = true;
+          connectedNodes.push(nodes.get(currentNode));
+
+          // Get all connected nodes
+          var neighbors = network.getConnectedNodes(currentNode);
+          queue = queue.concat(neighbors);
+
+          // Get all connected edges
+          var edgesConnected = network.getConnectedEdges(currentNode);
+          edgesConnected.forEach(edgeId => {
+            var edge = edges.get(edgeId);
+            if (!visited[edge.from] || !visited[edge.to]) {
+              connectedEdges.push(edge);
+            }
+          });
+        }
+      }
+      return { connectedNodes, connectedEdges };
+    }
+
+      
+    </script>
+</body>
+</html>
